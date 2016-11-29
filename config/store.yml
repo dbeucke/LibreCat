@@ -63,6 +63,7 @@ metrics:
 search:
   package: ElasticSearch
   options:
+    key_prefix: cat
     bags:
       project:
         cql_mapping:
