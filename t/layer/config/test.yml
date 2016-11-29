@@ -23,6 +23,7 @@ store:
           id_generator: UniBiResearchGroup
   search:
     options:
+      key_prefix: cat
       index_name: librecat_test
 
 hooks:
