@@ -19,9 +19,9 @@ before_install:
   - eval "$(perl -Mlocal::lib=${PWD}/perl_modules)"
 
 before_script:
-  - sleep 3
+  - sleep 10
 
-service:
+services:
   - sqlite3
   - elasticsearch
 
