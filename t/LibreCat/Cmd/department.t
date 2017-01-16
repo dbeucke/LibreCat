@@ -19,7 +19,7 @@ BEGIN {
 require_ok $pkg;
 
 # empty db
-Catmandu->store('backup')->bag('department')->delete_all;
+Catmandu->store->bag('department')->delete_all;
 Catmandu->store('search')->bag('department')->drop;
 
 {

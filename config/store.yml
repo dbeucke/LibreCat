@@ -10,14 +10,6 @@ default:
     bags:
       session:
         plugins: ['Datestamps']
-
-backup:
-  package: DBI
-  options:
-    data_source: "DBI:mysql:database=librecat_backup"
-    username: librecat
-    password: librecat
-    bags:
       audit:
         mapping:
             id:
@@ -33,8 +25,6 @@ backup:
                 type: string
             time:
                 type: integer
-      session:
-        plugins: ['Datestamps']
       publication: &backup_settings
         plugins: ['Datestamps', 'Versioning']
         id_generator: Incremental

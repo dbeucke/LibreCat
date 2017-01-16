@@ -13,7 +13,7 @@ BEGIN {
 require_ok $pkg;
 
 Catmandu->config->{default_lang} = 'en';
-Catmandu->store('backup')->bag('publication')->delete_all;
+Catmandu->store->bag('publication')->delete_all;
 Catmandu->store('search')->bag('publication')->drop;
 
 foreach my $obj (qw(publication project researcher)) {

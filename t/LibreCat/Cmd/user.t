@@ -22,7 +22,7 @@ BEGIN {
 require_ok $pkg;
 
 # empty db
-Catmandu->store('backup')->bag('researcher')->delete_all;
+Catmandu->store->bag('researcher')->delete_all;
 Catmandu->store('search')->bag('researcher')->drop;
 
 {

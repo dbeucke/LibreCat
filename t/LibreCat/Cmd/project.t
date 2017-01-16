@@ -21,7 +21,7 @@ BEGIN {
 require_ok $pkg;
 
 # empty db
-Catmandu->store('backup')->bag('project')->delete_all;
+Catmandu->store->bag('project')->delete_all;
 Catmandu->store('search')->bag('project')->drop;
 
 {

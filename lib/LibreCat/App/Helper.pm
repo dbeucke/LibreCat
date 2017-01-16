@@ -62,18 +62,18 @@ sub bag {
 }
 
 sub backup_audit {
-    state $bag = Catmandu->store('backup')->bag('audit');
+    state $bag = Catmandu->store->bag('audit');
 }
 
 sub backup_publication {
-    state $bag = Catmandu->store('backup')->bag('publication');
+    state $bag = Catmandu->store->bag('publication');
 }
 
 sub backup_publication_static {
     my ($self) = @_;
     my $backup = Catmandu::Store::DBI->new(
         'data_source' =>
-            $self->config->{store}->{backup}->{options}->{data_source},
+            $self->config->{store}->{options}->{data_source},
         username => $self->config->{store}->{backup}->{options}->{username},
         password => $self->config->{store}->{backup}->{options}->{password},
         bags     => {publication => {plugins => ['Versioning']}},
@@ -82,23 +82,23 @@ sub backup_publication_static {
 }
 
 sub backup_project {
-    state $bag = Catmandu->store('backup')->bag('project');
+    state $bag = Catmandu->store->bag('project');
 }
 
 sub backup_researcher {
-    state $bag = Catmandu->store('backup')->bag('researcher');
+    state $bag = Catmandu->store->bag('researcher');
 }
 
 sub backup_department {
-    state $bag = Catmandu->store('backup')->bag('department');
+    state $bag = Catmandu->store->bag('department');
 }
 
 sub backup_research_group {
-    state $bag = Catmandu->store('backup')->bag('research_group');
+    state $bag = Catmandu->store->bag('research_group');
 }
 
 sub publication {
-    state $bag = Catmandu->store('search')->bag('publication');
+    state $bag = Catmandu->store->bag('publication');
 }
 
 sub project {
@@ -377,7 +377,7 @@ sub get_metrics {
 
 sub new_record {
     my ($self, $bag) = @_;
-    Catmandu->store('backup')->bag($bag)->generate_id;
+    Catmandu->store->bag($bag)->generate_id;
 }
 
 sub update_record {
