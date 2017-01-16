@@ -75,7 +75,7 @@ search:
                 'all': true
                 '=': true
                 'exact': true
-              field: '_id'
+              field: 'cat_id'
             basic:
               op:
                 'any': true
@@ -385,7 +385,7 @@ search:
                 '<=': true
                 '>=': true
                 'any': true
-              field: '_id'
+              field: 'cat_id'
               sort: true
               description: "the unique PUB ID"
             orcid:
@@ -738,7 +738,7 @@ search:
               op:
                 '=': true
                 '<>': true
-              field: _id
+              field: cat_id
             forschend:
               op:
                 '=': true
@@ -785,7 +785,7 @@ search:
               op:
                 '=': true
                 '<>': true
-              field: _id
+              field: cat_id
             name:
               op:
                 'any': true
@@ -827,7 +827,7 @@ search:
               op:
                 '=': true
                 '<>': true
-              field: _id
+              field: cat_id
             name:
               op:
                 'any': true
@@ -888,7 +888,7 @@ search:
       project:
         include_in_all: false
         properties:
-          _id: {type: string, include_in_all: true, index: not_analyzed}
+          cat_id: {type: string, include_in_all: true, index: not_analyzed}
           name:
             type: multi_field
             fields:
@@ -944,7 +944,7 @@ search:
       publication:
         include_in_all: false
         properties:
-          _id: {type: string, include_in_all: true, index: not_analyzed}
+          cat_id: {type: string, include_in_all: true, index: not_analyzed}
           title: &titleField
             type: multi_field
             fields:
@@ -1072,7 +1072,7 @@ search:
       researcher:
         include_in_all: false
         properties:
-          _id: {type: string, include_in_all: true, index: not_analyzed}
+          cat_id: {type: string, include_in_all: true, index: not_analyzed}
           publication_hits: {type: integer}
           research_hits: {type: integer}
           combined_hits: {type: integer}
@@ -1134,7 +1134,7 @@ search:
       department:
         include_in_all: false
         properties:
-          _id: {type: string, include_in_all: true, index: not_analyzed}
+          cat_id: {type: string, include_in_all: true, index: not_analyzed}
           date_created: {type: date, format: date_time_no_millis}
           date_updated: {type: date, format: date_time_no_millis}
           name:
@@ -1156,7 +1156,7 @@ search:
       research_group:
         include_in_all: false
         properties:
-          _id: {type: string, include_in_all: true, index: not_analyzed}
+          cat_id: {type: string, include_in_all: true, index: not_analyzed}
           name:
             type: multi_field
             fields:

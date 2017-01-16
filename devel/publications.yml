@@ -1,5 +1,5 @@
 ---
-_id: '2737383'
+cat_id: '2737383'
 abstract:
 - lang: eng
   text: Glutathione peroxidases (Gpxs) are antioxidant enzymes not studied so far
@@ -152,7 +152,7 @@ type: journal_article
 volume: 66
 year: '2015'
 ---
-_id: '2737384'
+cat_id: '2737384'
 abstract:
 - lang: eng
   text: In 1716, as a result of the War of the Spanish Succession, Emperor Charles
@@ -216,7 +216,7 @@ type: book
 volume: 29
 year: '2016'
 ---
-_id: '2737385'
+cat_id: '2737385'
 citation:
   default: |
     <!-- simple example for a citation template -->
@@ -255,7 +255,7 @@ title: 'Bibliography of pragmatics online: 13th release, updated and expanded'
 type: book_editor
 year: '2016'
 ---
-_id: '2737386'
+cat_id: '2737386'
 abstract:
 - lang: eng
   text: In order to protect minors from the risks associated with exposure to content
@@ -317,7 +317,7 @@ title: 'Empowering children through labelling in social networks: illusion or so
 type: book_chapter
 year: '2016'
 ---
-_id: '2737387'
+cat_id: '2737387'
 author:
 - first_name: Michael
   full_name: Schaub, Michael
@@ -350,7 +350,7 @@ title: '''Good As Gone'' Doesn''t Quite Get To Greatness'
 type: review
 year: '2016'
 ---
-_id: '2737388'
+cat_id: '2737388'
 author:
 - first_name: Jonas
   full_name: Billet, Jonas
@@ -387,7 +387,7 @@ title: Ordering of TiO2 (nanoparticles) to mesoporous structures
 type: conference_abstract
 year: '2016'
 ---
-_id: '2737389'
+cat_id: '2737389'
 citation:
   default: |
     <!-- simple example for a citation template -->
@@ -420,7 +420,7 @@ title: 'Rare earths for phosphor development: the final frontier?'
 type: conference_editor
 year: '2016'
 ---
-_id: '2737390'
+cat_id: '2737390'
 author:
 - first_name: Stefanie
   full_name: Krijger, Stefanie
@@ -456,7 +456,7 @@ title: Listening challenges for children with cochlear implants in mainstream ed
 type: conference
 year: '2016'
 ---
-_id: '2737391'
+cat_id: '2737391'
 author:
 - first_name: Milad
   full_name: El Haddad, Milad
@@ -484,7 +484,7 @@ title: 'Signal processing of intracardiac electrograms : optimization of mapping
 type: dissertation
 year: '2014'
 ---
-_id: '2737392'
+cat_id: '2737392'
 author:
 - first_name: Eva
   full_name: Lievens, Eva
@@ -513,7 +513,7 @@ title: 'Young users, social media and the legal framework: match or mismatch?'
 type: encyclopedia_article
 year: '2016'
 ---
-_id: '2737393'
+cat_id: '2737393'
 citation:
   default: |
     <!-- simple example for a citation template -->
@@ -542,7 +542,7 @@ title: The NEK-sus of the NLRP3 inflammasome
 type: journal_editor
 year: '2016'
 ---
-_id: '2737394'
+cat_id: '2737394'
 author:
 - first_name: Alan
   full_name: Smith, Alan
@@ -571,7 +571,7 @@ title: 'Euro 2016 power rankings: Croatia go top but problems for France'
 type: newspaper_article
 year: '2016'
 ---
-_id: '2737395'
+cat_id: '2737395'
 author:
 - first_name: Y
   full_name: Donderlinger, Y
@@ -600,7 +600,7 @@ title: Necroptosis inducing MLKL fragment and inhibitors thereof.
 type: patent
 year: '2014'
 ---
-_id: '2737395'
+cat_id: '2737395'
 author:
 - first_name: Dida
   full_name: Markovic, Dida
@@ -626,7 +626,7 @@ title: Large-scale retrospective relative spectro-photometric self-calibration i
 type: preprint
 year: '2016'
 ---
-_id: '2737396'
+cat_id: '2737396'
 author:
 - first_name: Hense
   full_name: Gebel, Hense
@@ -654,7 +654,7 @@ title: Personaleinsatz aktiv gestalten. Methodendokumentation der deutschlandwei
 type: report
 year: '2016'
 ---
-_id: '2737397'
+cat_id: '2737397'
 citation:
   default: |
     <!-- simple example for a citation template -->
@@ -683,7 +683,7 @@ translator:
 type: translation
 year: '2012'
 ---
-_id: '2737398'
+cat_id: '2737398'
 citation:
   default: |
     <!-- simple example for a citation template -->
@@ -712,7 +712,7 @@ translator:
 type: translation_chapter
 year: '2010'
 ---
-_id: '2737399'
+cat_id: '2737399'
 author:
 - first_name: Keller W
   full_name: Utar H, Keller W
@@ -739,7 +739,7 @@ title: 'INTERNATIONAL TRADE AND JOB POLARIZATION: EVIDENCE AT THE WORKER-LEVEL'
 type: working_paper
 year: '2016'
 ---
-_id: '2737400'
+cat_id: '2737400'
 author:
 - first_name: T
   full_name: Kluth, T

@@ -1,5 +1,5 @@
 ---
-_id: P1
+cat_id: P1
 _version: 8
 acronym: Librecat
 alternative_name: Catmandu
@@ -35,7 +35,7 @@ start_date: 2016-05-11
 url: http://librecat.org/
 ...
 ---
-_id: P2
+cat_id: P2
 _version: 1
 acronym: Librecat updates
 alternative_name: Librecat updates
