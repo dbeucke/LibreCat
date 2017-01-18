@@ -3,11 +3,11 @@ package LibreCat::Cmd::publication;
 use Catmandu::Sane;
 use Catmandu;
 use Catmandu::Util;
-use LibreCat::App::Helper;
 use LibreCat::Validator::Publication;
 use LibreCat::App::Catalogue::Controller::File;
 use Path::Tiny;
 use Carp;
+use DateTime;
 use parent qw(LibreCat::Cmd);
 
 sub description {
@@ -126,7 +126,7 @@ sub _list {
     my $total = $self->opts->{total} // undef;
     my $start = $self->opts->{start} // undef;
 
-    my $it = LibreCat::App::Helper::Helpers->new->publication->searcher(
+    my $it = Catmandu->store('search')->bag('publication')->searcher(
         cql_query => $query , total => $total , start => $start
     );
 
@@ -154,7 +154,7 @@ sub _export {
     my $total = $self->opts->{total} // undef;
     my $start = $self->opts->{start} // undef;
 
-    my $it = LibreCat::App::Helper::Helpers->new->publication->searcher(
+    my $it = Catmandu->store('search')->bag('publication')->searcher(
         cql_query => $query , total => $total , start => $start
     );
 
@@ -170,7 +170,7 @@ sub _get {
 
     croak "usage: $0 get <id>" unless defined($id);
 
-    my $data = LibreCat::App::Helper::Helpers->new->get_publication($id);
+    my $data = LibreCat->store->get('publication', $id);
 
     Catmandu->export($data, 'YAML') if $data;
 
@@ -184,7 +184,6 @@ sub _add {
 
     my $ret       = 0;
     my $importer  = Catmandu->importer('YAML', file => $file);
-    my $helper    = LibreCat::App::Helper::Helpers->new;
     my $validator = LibreCat::Validator::Publication->new;
 
     my $skip_citation = $self->opts->{'no-citation'} ? 1 : 0;
@@ -194,8 +193,8 @@ sub _add {
             my $rec = $_[0];
 
             if ($validator->is_valid($rec)) {
-                $rec->{_id} //= $helper->new_record('publication');
-                $helper->store_record('publication', $rec, $skip_citation);
+                $rec->{_id} //= LibreCat->store->generate_id('publication');
+                LibreCat->store->_store_record('publication', $rec, $skip_citation);
                 print "added $rec->{_id}\n";
                 return 1;
             }
@@ -211,7 +210,7 @@ sub _add {
         }
     );
 
-    my $index = $helper->publication;
+    my $index = Catmandu->store('search')->bag('publication');
     $index->add_many($records);
     $index->commit;
 
@@ -223,9 +222,7 @@ sub _delete {
 
     croak "usage: $0 delete <id>" unless defined($id);
 
-    my $result
-        = LibreCat::App::Helper::Helpers->new->delete_record('publication',
-        $id);
+    my $result = LibreCat->store->delete('publication', $id);
 
     if ($result) {
         print "deleted $id\n";
@@ -242,9 +239,7 @@ sub _purge {
 
     croak "usage: $0 purge <id>" unless defined($id);
 
-    my $result
-        = LibreCat::App::Helper::Helpers->new->purge_record('publication',
-        $id);
+    my $result = LibreCat->store->purge('publication', $id);
 
     if ($result) {
         print "purged $id\n";
@@ -317,12 +312,10 @@ sub _embargo {
 
     my $update = $args[0] && $args[0] eq 'update';
 
-    my $helper = LibreCat::App::Helper::Helpers->new;
-    my $now    = $helper->now;
-    $now =~ s/T.*//;
+    my $today    = DateTime->now->truncate(to => 'day');
 
-    my $query = "embargo < $now";
-    my $it = $helper->publication->searcher(cql_query => $query);
+    my $query = "embargo < $today";
+    my $it = Catmandu->store('search')->bag('publication')->searcher(cql_query => $query);
 
     printf "%-9s\t%-9s\t%-12.12s\t%-14.14s\t%-15.15s\t%s\n",
         qw(id file_id access_level request_a_copy embargo file_name);
@@ -335,7 +328,7 @@ sub _embargo {
         for my $file (@{$item->{file}}) {
             my $embargo = Catmandu::Util::trim($file->{embargo});
 
-            if ($update && length($embargo) && $embargo le $now) {
+            if ($update && length($embargo) && $embargo le $today) {
                 $process = 1;
             }
             else {
@@ -393,15 +386,15 @@ sub _files_list {
     };
 
     if (defined($id) && $id =~ /^[0-9A-Za-z-]+$/) {
-        my $data = LibreCat::App::Helper::Helpers->new->get_publication($id);
+        my $data = LibreCat->store->get('publication', $id);
         $printer->($data);
     }
     elsif (defined($id)) {
-        LibreCat::App::Helper::Helpers->new->publication->searcher(
+        Catmandu->store('search')->bag('publication')->searcher(
             cql_query => $id)->each($printer);
     }
     else {
-        LibreCat::App::Helper::Helpers->new->publication->each($printer);
+        Catmandu->store('search')->bag('publication')->each($printer);
     }
 }
 
@@ -412,7 +405,6 @@ sub _files_load {
     croak "list - can't open $filename for reading" unless -r $filename;
     local (*FH);
 
-    my $helper = LibreCat::App::Helper::Helpers->new;
     my $importer = Catmandu->importer('TSV', file => $filename);
 
     my $prev_id = undef;
@@ -453,11 +445,11 @@ sub _files_load {
             delete $file->{id};
 
             if ($prev_id && $prev_id ne $id) {
-                my $data = $helper->get_publication($id);
+                my $data = LibreCat->store->get('publication', $id);
 
                 if ($data) {
                     $self->_file_process($data, $files)
-                        && $helper->update_record('publication', $data);
+                        && LibreCat->store->update('publication', $data);
                 }
                 else {
                     warn "$id - no such publication";
@@ -473,11 +465,11 @@ sub _files_load {
     );
 
     if ($files) {
-        my $data = $helper->get_publication($prev_id);
+        my $data = ibreCat->store->get('publication', $prev_id);
 
         if ($data) {
             $self->_file_process($data, $files)
-                && $helper->update_record('publication', $data);
+                && ibreCat->store->update('publication', $data);
         }
         else {
             warn "$prev_id - no such publication";
@@ -544,7 +536,7 @@ sub _files_reporter {
                             , header  => 1
                             , fields => [qw(status container filename error)]);
 
-    LibreCat::App::Helper::Helpers->new->publication->each(sub {
+    Catmandu->store('search')->bag('publication')->each(sub {
         my ($item) = @_;
         return unless $item->{file} && ref($item->{file}) eq 'ARRAY';
 

@@ -110,7 +110,7 @@ Saves the data in the authority database.
         $p->{password} = mkpasswd($p->{password})
             if ($p->{password} and $p->{password} !~ /\$.{15,}/);
 
-        h->update_record('researcher', $p);
+        LibreCat->store->update('researcher', $p);
         template 'admin/account';
     };
 
@@ -162,7 +162,7 @@ Input is person id. Returns warning if person is already in the database.
 
     post '/project/update' => needs role => 'super_admin' => sub {
         my $p = h->nested_params();
-        my $return = h->update_record('project', $p);
+        my $return = LibreCat->store->update('project', $p);
         redirect '/librecat/admin/project';
     };
 
@@ -192,7 +192,7 @@ Input is person id. Returns warning if person is already in the database.
 
     post '/research_group/update' => needs role => 'super_admin' => sub {
         my $p = h->nested_params();
-        my $return = h->update_record('research_group', $p);
+        my $return = LibreCat->store->update('research_group', $p);
         redirect '/librecat/admin/research_group';
     };
 
@@ -222,7 +222,7 @@ Input is person id. Returns warning if person is already in the database.
 
     post '/department/update' => needs role => 'super_admin' => sub {
         my $p = h->nested_params();
-        my $return = h->update_record('department', $p);
+        my $return = LibreCat->store->update('department', $p);
         redirect '/librecat/admin/department';
     };
 

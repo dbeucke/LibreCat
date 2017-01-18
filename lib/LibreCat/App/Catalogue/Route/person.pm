@@ -82,7 +82,7 @@ for his own publication list.
             $person->{style} = undef;
         }
 
-        h->update_record('researcher', $person);
+        LibreCat->store->update('researcher', $person);
 
         redirect '/librecat';
     };
@@ -103,7 +103,7 @@ be displayed on author's profile page.
         map {$person->{$_} = params->{$_} ? params->{$_} : ""} @identifier;
         redirect '/librecat' if keys %{$person} > 1;
 
-        h->update_record('researcher', $person);
+        LibreCat->store->update('researcher', $person);
 
     };
 
@@ -121,7 +121,7 @@ User can choose default language for the librecat backend
         my $lang   = params->{lang};
         if ($lang eq "en" or $lang eq "de") {
             $person->{lang} = $lang;
-            h->update_record('researcher', $person);
+            LibreCat->store->update('researcher', $person);
             session lang => $lang;
         }
 
@@ -146,7 +146,7 @@ new publication form.
         $fix->fix($p);
         my $person = h->get_person(session('personNumber'));
         $person->{department} = $p->{department};
-        h->update_record('researcher', $person);
+        LibreCat->store->update('researcher', $person);
 
         redirect '/librecat';
 

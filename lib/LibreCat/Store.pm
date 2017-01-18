@@ -2,6 +2,7 @@ package LibreCat::Store;
 
 use Catmandu::Sane;
 use JSON::MaybeXS qw(encode_json);
+use LibreCat::Worker::Indexer;
 #use LibreCat::App::Catalogue::Controller::File;
 #use LibreCat::App::Catalogue::Controller::Material;
 use Moo;
@@ -20,8 +21,6 @@ has search_store => (
 );
 
 sub _build_search_store {
-    my $self = shift;
-
     Catmandu->store('search');
 }
 
@@ -47,7 +46,7 @@ sub update {
     }
 
     $rec = $self->_store_record($bag, $rec);
-    $self->_index_record($bag, $rec);
+    $self->_index_record($bag, $rec->{_id});
 
     $rec;
 }
@@ -130,14 +129,15 @@ sub _store_record {
 }
 
 sub _index_record {
-    my ($self, $bag, $rec) = @_;
+    my ($self, $bag, $id) = @_;
 
-    $self->log->debug("indexing record in $bag...");
-    $self->log->debug(encode_json($rec));
-    $self->search_store->bag($bag)->add($rec);
-    $self->search_store->bag($bag)->commit;
+    $self->log->debug("indexing record '$id' in $bag...");
+    #$self->log->debug(encode_json($rec));
+    LibreCat::Worker::Indexer->new->index_record({bag => $bag, id=> $id});
+#    $self->search_store->bag($bag)->add($rec);
+#    $self->search_store->bag($bag)->commit;
 
-    $rec;
+    1;
 }
 
 sub _create_fixer {

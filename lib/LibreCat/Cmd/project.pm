@@ -1,7 +1,6 @@
 package LibreCat::Cmd::project;
 
 use Catmandu::Sane;
-use LibreCat::App::Helper;
 use LibreCat::Validator::Project;
 use Carp;
 use parent qw(LibreCat::Cmd);
@@ -85,7 +84,7 @@ sub _list {
     my $total = $self->opts->{total} // undef;
     my $start = $self->opts->{start} // undef;
 
-    my $it = LibreCat::App::Helper::Helpers->new->project->searcher(
+    my $it = Catmandu->store('search')->bag('project')->searcher(
         cql_query => $query , total => $total , start => $start
     );
 
@@ -109,7 +108,7 @@ sub _export {
     my $total = $self->opts->{total} // undef;
     my $start = $self->opts->{start} // undef;
 
-    my $it = LibreCat::App::Helper::Helpers->new->project->searcher(
+    my $it = Catmandu->store('search')->bag('project')->searcher(
         cql_query => $query , total => $total , start => $start
     );
 
@@ -125,7 +124,7 @@ sub _get {
 
     croak "usage: $0 get <id>" unless defined($id);
 
-    my $data = LibreCat::App::Helper::Helpers->new->get_project($id);
+    my $data = LibreCat->store->get('project', $id);
 
     Catmandu->export($data, 'YAML') if $data;
 
@@ -139,7 +138,6 @@ sub _add {
 
     my $ret       = 0;
     my $importer  = Catmandu->importer('YAML', file => $file);
-    my $helper    = LibreCat::App::Helper::Helpers->new;
     my $validator = LibreCat::Validator::Project->new;
 
     my $records = $importer->select(
@@ -147,8 +145,8 @@ sub _add {
             my $rec = $_[0];
 
             if ($validator->is_valid($rec)) {
-                $rec->{_id} //= $helper->new_record('project');
-                $helper->store_record('project', $rec);
+                $rec->{_id} //= LibreCat->store->generate_id('project');
+                LibreCat->store->_store_record('project', $rec);
                 print "added $rec->{_id}\n";
                 return 1;
             }
@@ -163,7 +161,7 @@ sub _add {
         }
     );
 
-    my $index = $helper->project;
+    my $index = Catmandu->store('search')->bag('project');
     $index->add_many($records);
     $index->commit;
 
@@ -175,11 +173,9 @@ sub _delete {
 
     croak "usage: $0 delete <id>" unless defined($id);
 
-    my $h = LibreCat::App::Helper::Helpers->new;
+    my $result = LibreCat->store->delete('project', $id);
 
-    my $result = $h->project->delete($id);
-
-    if ($h->project->commit) {
+    if ($result) {
         print "deleted $id\n";
         return 0;
     }

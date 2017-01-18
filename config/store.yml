@@ -27,15 +27,15 @@ default:
                 type: integer
       publication: &backup_settings
         plugins: ['Datestamps', 'Versioning']
-        id_generator: Incremental
+        #id_generator: Incremental
       project:
         plugins: ['Datestamps', 'Versioning']
-        id_generator: UniBiProject
+        #id_generator: UniBiProject
       researcher: *backup_settings
       department: *backup_settings
       research_group:
         plugins: ['Datestamps', 'Versioning']
-        id_generator: UniBiResearchGroup
+        #id_generator: UniBiResearchGroup
 
 metrics:
   package: DBI

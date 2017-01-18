@@ -1,7 +1,6 @@
 package LibreCat::Cmd::user;
 
 use Catmandu::Sane;
-use LibreCat::App::Helper;
 use LibreCat::Validator::Researcher;
 use App::bmkpasswd qw(passwdcmp mkpasswd);
 use Carp;
@@ -90,7 +89,7 @@ sub _list {
     my $total = $self->opts->{total} // undef;
     my $start = $self->opts->{start} // undef;
 
-    my $it = LibreCat::App::Helper::Helpers->new->researcher->searcher(
+    my $it = Catmandu->store('search')->bag('researcher')->searcher(
         cql_query => $query , total => $total , start => $start
     );
 
@@ -119,7 +118,7 @@ sub _export {
     my $total = $self->opts->{total} // undef;
     my $start = $self->opts->{start} // undef;
 
-    my $it = LibreCat::App::Helper::Helpers->new->researcher->searcher(
+    my $it = Catmandu->store('search')->bag('researcher')->searcher(
         cql_query => $query , total => $total , start => $start
     );
 
@@ -135,7 +134,7 @@ sub _get {
 
     croak "usage: $0 get <id>" unless defined($id);
 
-    my $data = LibreCat::App::Helper::Helpers->new->get_person($id);
+    my $data = LibreCat->store->get('researcher', $id);
 
     Catmandu->export($data, 'YAML') if $data;
 
@@ -149,19 +148,18 @@ sub _add {
 
     my $ret       = 0;
     my $importer  = Catmandu->importer('YAML', file => $file);
-    my $helper    = LibreCat::App::Helper::Helpers->new;
     my $validator = LibreCat::Validator::Researcher->new;
 
     my $records = $importer->select(
         sub {
             my $rec = $_[0];
 
-            $rec->{_id} //= $helper->new_record('researcher');
+            $rec->{_id} //= LibreCat->store->generate_id('researcher');
             $rec->{password} = mkpasswd($rec->{password})
                 if exists $rec->{password};
 
             if ($validator->is_valid($rec)) {
-                $helper->store_record('researcher', $rec);
+                LibreCat->store->_store_record('researcher', $rec);
                 print "added $rec->{_id}\n";
                 return 1;
             }
@@ -176,7 +174,7 @@ sub _add {
         }
     );
 
-    my $index = $helper->researcher;
+    my $index = Catmandu->store('search')->bag('researcher');
     $index->add_many($records);
     $index->commit;
 
@@ -188,10 +186,9 @@ sub _delete {
 
     croak "usage: $0 delete <id>" unless defined($id);
 
-    my $h      = LibreCat::App::Helper::Helpers->new;
-    my $result = $h->researcher->delete($id);
+    my $result = LibreCat->store->delete('researcher', $id);
 
-    if ($h->researcher->commit) {
+    if ($result) {
         print "deleted $id\n";
         return 0;
     }
@@ -239,7 +236,7 @@ sub _passwd {
 
     croak "usage: $0 get <id>" unless defined($id);
 
-    my $data = LibreCat::App::Helper::Helpers->new->get_person($id);
+    my $data = LibreCat->store->get('person', $id);
 
     my $name = $data->{full_name};
     my $make_external = undef;
@@ -268,12 +265,7 @@ sub _passwd {
 
     $data->{password} = mkpasswd($password2);
 
-    my $helper = LibreCat::App::Helper::Helpers->new;
-    $data = $helper->store_record('researcher', $data);
-
-    my $index = $helper->researcher;
-    $index->add($data);
-    $index->commit;
+    $data = LibreCat->store->update('researcher', $data);
 
     return 0;
 }

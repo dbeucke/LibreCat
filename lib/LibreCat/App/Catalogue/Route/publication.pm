@@ -52,7 +52,7 @@ Some fields are pre-filled.
 
         return template 'backend/add_new' unless $type;
 
-        my $id = h->new_record('publication');
+        my $id = LibreCat->store->generate_id('publication');
 
         # set some basic values
         my $data = {
@@ -139,7 +139,7 @@ Checks if the user has permission the see/edit this record.
 
         forward '/' unless $id;
 
-        my $rec = h->publication->get($id);
+        my $rec = LibreCat->store->get('publication', $id);
 
         unless ($rec) {
             return template 'error',
@@ -214,7 +214,7 @@ Checks if the user has the rights to update this record.
         h->hook('publication-update')->fix_around(
             $p,
             sub {
-                h->update_record('publication', $p);
+                LibreCat->store->update('publication', $p);
             }
         );
 
@@ -247,7 +247,7 @@ Checks if the user has the rights to edit this record.
             $rec,
             sub {
                 $rec->{status} = "returned";
-                h->update_record('publication', $rec);
+                LibreCat->store->update('publication', $rec);
             }
         );
 
@@ -347,7 +347,7 @@ Publishes private records, returns to the list.
 
             $hook->fix_before($record);
 
-            my $res = h->update_record('publication', $record);
+            my $res = LibreCat->store->update('publication', $record);
 
             $hook->fix_after($res);
         }
@@ -399,7 +399,7 @@ Changes the layout of the edit form.
         my $person = h->get_person(session('personNumber'));
         if ($mode eq "normal" or $mode eq "expert") {
             $person->{edit_mode} = $mode;
-            h->update_record('researcher', $person);
+            LibreCat->store->update('researcher', $person);
         }
 
         my $path = "backend/forms/";

@@ -1,8 +1,8 @@
 package LibreCat::Cmd::research_group;
 
 use Catmandu::Sane;
-use LibreCat::App::Helper;
 use LibreCat::Validator::Research_group;
+use LibreCat;
 use Carp;
 use parent qw(LibreCat::Cmd);
 
@@ -81,7 +81,7 @@ sub _list {
     my $total = $self->opts->{total} // undef;
     my $start = $self->opts->{start} // undef;
 
-    my $it = LibreCat::App::Helper::Helpers->new->research_group->searcher(
+    my $it = Catmandu->store('search')->bag('research_group')->searcher(
         cql_query => $query , total => $total , start => $start
     );
 
@@ -107,7 +107,7 @@ sub _export {
     my $total = $self->opts->{total} // undef;
     my $start = $self->opts->{start} // undef;
 
-    my $it = LibreCat::App::Helper::Helpers->new->research_group->searcher(
+    my $it = Catmandu->store('search')->bag('research_group')->searcher(
         cql_query => $query , total => $total , start => $start
     );
 
@@ -123,8 +123,7 @@ sub _get {
 
     croak "usage: $0 get <id>" unless defined($id);
 
-    my $h    = LibreCat::App::Helper::Helpers->new;
-    my $data = $h->get_research_group($id);
+    my $data = LibreCat->store->get('research_group', $id);
 
     Catmandu->export($data, 'YAML') if $data;
 
@@ -138,7 +137,6 @@ sub _add {
 
     my $ret       = 0;
     my $importer  = Catmandu->importer('YAML', file => $file);
-    my $helper    = LibreCat::App::Helper::Helpers->new;
     my $validator = LibreCat::Validator::Research_group->new;
 
     my $records = $importer->select(
@@ -146,8 +144,8 @@ sub _add {
             my $rec = $_[0];
 
             if ($validator->is_valid($rec)) {
-                $rec->{_id} //= $helper->new_record('research_group');
-                $helper->store_record('research_group', $rec);
+                $rec->{_id} //= LibreCat->store->generate_id('research_group');
+    # TODO            LibreCat->store->update('research_group', $rec);
                 print "added $rec->{_id}\n";
                 return 1;
             }
@@ -162,7 +160,7 @@ sub _add {
         }
     );
 
-    my $index = $helper->research_group;
+    my $index = Catmandu->store('search')->bag('research_group');
     $index->add_many($records);
     $index->commit;
 
@@ -174,10 +172,9 @@ sub _delete {
 
     croak "usage: $0 delete <id>" unless defined($id);
 
-    my $h      = LibreCat::App::Helper::Helpers->new;
-    my $result = $h->research_group->delete($id);
+    my $result = LibreCat->store->delete('research_group', $id);
 
-    if ($h->research_group->commit) {
+    if ($result) {
         print "deleted $id\n";
         return 0;
     }

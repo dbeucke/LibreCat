@@ -72,6 +72,10 @@ sub searcher {
     state $searcher = require_package('LibreCat::Search')->new(store => Catmandu->store('search'));
 }
 
+sub store {
+    state $store = require_package('LibreCat::Store')->new(store => Catmandu->store('default'));
+}
+
 1;
 
 __END__
