@@ -6,22 +6,13 @@ use Test::More;
 use Test::Exception;
 
 my $pkg;
-
 BEGIN {
-    use Catmandu::Sane;
-    use Path::Tiny;
-    use lib path(__FILE__)->parent->parent->child('lib')->stringify;
-    use LibreCat::Layers;
-
-    LibreCat::Layers->new(layer_paths => [qw(t/layer)])->load;
-
     $pkg = 'LibreCat::Search';
     use_ok $pkg;
 }
 
 require_ok $pkg;
 dies_ok { $pkg->new() } "params required";
-#dies_ok { $pkg->new(store => 'blabla') } "is Catmandu store";
 lives_ok { $pkg->new(store => Catmandu::Store::Hash->new()) } "store param";
 
 my $store = Catmandu->store('search');
@@ -33,7 +24,7 @@ my $bag = $store->bag('publication');
 $bag->delete_all;
 my $importer = Catmandu->importer('YAML', file => 't/records/valid-publication.yml');
 $bag->add_many($importer);
-$bag->commit;
+ok $bag->commit;
 ok $store->bag('publication')->get('999999999'), "can get record";
 
 ok ! $searcher->search('', {cql => ["id=999999999"]}), "bag required";

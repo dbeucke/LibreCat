@@ -82,20 +82,21 @@ Catmandu->store('search')->bag('researcher')->drop;
     my $result
         = test_app(qq|LibreCat::CLI| => ['user', 'delete', '999111999']);
 
-    ok !$result->error, 'ok threw no exception';
+    ok !$result->error, 'delete threw no exception';
 
     my $output = $result->stdout;
-    ok $output , 'got an output';
+    ok $output , 'delete prints an output';
 
-    like $output , qr/^deleted 999111999/, 'deleted 999111999';
+    like $output , qr/^deleted 999111999/, 'deleted correct record';
 }
 
 {
     my $result = test_app(qq|LibreCat::CLI| => ['user', 'get', '999111999']);
 
-    ok $result->error, 'ok no exception';
+    ok $result->error, 'get from empty store';
 
     my $output = $result->stdout;
+
     ok length($output) == 0, 'got no result';
 }
 

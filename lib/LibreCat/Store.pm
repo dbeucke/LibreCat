@@ -58,13 +58,18 @@ sub delete {
 
     if ($bag eq 'publication' &&
         ($del_record->{oai_deleted} || $del_record->{status} eq 'public')
-        ) {
-            $del_record ->{oai_deleted}  = 1
-        }
+        )
+    {
+            $del_record ->{oai_deleted}  = 1;
+            $del_record->{status} = 'deleted';
 
-    $del_record->{status} = 'deleted';
+            $self->update($bag, $del_record);
+    }
+    else {
+        $self->purge($bag, $id);
+    }
 
-    $self->update($bag, $del_record);
+
 }
 
 sub purge {

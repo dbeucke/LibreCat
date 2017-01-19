@@ -1,11 +1,8 @@
 use Catmandu::Sane;
 use Path::Tiny;
-use lib path(__FILE__)->parent->parent->child('lib')->stringify;
 use LibreCat load => (layer_paths => [qw(t/layer)]);
-
 use Catmandu::Sane;
 use Catmandu;
-
 use LibreCat::CLI;
 use Test::More;
 use Test::Exception;
@@ -36,6 +33,7 @@ Catmandu->store('search')->drop;
     ok !$result->error, 'ok threw no exception';
 
     my $output = $result->stdout;
+
     ok $output , 'got an output';
 
     my $count = count_research_group($output);
@@ -73,7 +71,7 @@ Catmandu->store('search')->drop;
 
     my $count = count_research_group($output);
 
-    ok $count > 0, 'got more than one research_group';
+    ok $count > 0, 'got at least one research_group';
 }
 
 {
