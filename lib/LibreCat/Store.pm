@@ -139,8 +139,6 @@ sub _index_record {
     $self->log->debug("indexing record '$id' in $bag...");
     #$self->log->debug(encode_json($rec));
     LibreCat::Worker::Indexer->new->index_record({bag => $bag, id=> $id});
-#    $self->search_store->bag($bag)->add($rec);
-#    $self->search_store->bag($bag)->commit;
 
     1;
 }
@@ -160,7 +158,7 @@ sub _create_fixer {
 
     $self->log->error("can't find a fixer for: `$file'");
 
-    return Catmandu::Fix->new();
+    return Catmandu::Fix->new(fixes => ["nothing()"]);
 }
 
 sub _is_bag_valid {

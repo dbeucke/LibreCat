@@ -50,7 +50,7 @@
     <div class="col-lg-2 col-md-3 text-muted">[% h.loc("forms.${type}.field.department.label") %]</div>
     <div class="col-lg-10 col-md-9">
   [%- ELSE -%]<br />[% END %]
-  <a href="/[% bag %]?q=department=[% dep._id %]" class="long">[% h.get_department(dep._id).display %]</a>
+  <a href="/[% bag %]?cql=department=[% dep._id %]" class="long">[% h.get_department(dep._id).display %]</a>
   [%- IF loop.last %]</div></div>[% END %]
 [%- END %]
 
@@ -100,7 +100,7 @@
     <div class="col-lg-2 col-md-3 text-muted">[% h.loc("forms.${type}.field.keyword.label") %]</div>
     <div class="col-lg-10 col-md-9" itemprop="keywords">
     [%- FOREACH kw IN keyword %]
-        <a href='/[% bag %]?q=keyword="[% kw %]"'>[% kw | html %]</a>
+        <a href='/[% bag %]?cql=keyword="[% kw %]"'>[% kw | html %]</a>
       [%- UNLESS loop.last %]; [% END %]
     [%- END %]
     </div>
@@ -109,7 +109,7 @@
 
   <div class="row">
     <div class="col-lg-2 col-md-3 text-muted">[% lf.forms.${type}.field.year.label || h.loc("forms.${type}.field.year_extern.label") %]</div>
-    <div class="col-lg-10 col-md-9"><span itemprop="copyrightYear"><a href="/[% bag %]?q=year=[% year %]">[% year %]</a></span></div>
+    <div class="col-lg-10 col-md-9"><span itemprop="copyrightYear"><a href="/[% bag %]?cql=year=[% year %]">[% year %]</a></span></div>
   </div>
   [%- FOREACH item IN ['publication', 'volume', 'issue', 'article_number', 'page'] %]
     [%- IF $item %]

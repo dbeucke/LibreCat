@@ -37,19 +37,6 @@ default:
         plugins: ['Datestamps', 'Versioning']
         #id_generator: UniBiResearchGroup
 
-metrics:
-  package: DBI
-  options:
-    data_source: "DBI:mysql:database=librecat_metrics"
-    username: librecat
-    password: librecat
-    bags:
-      wos: &metrics_settings
-        plugins: ['Datestamps']
-      epmc_citations: *metrics_settings
-      epmc_references: *metrics_settings
-      epmc_dblinks: *metrics_settings
-
 search:
   package: ElasticSearch
   options:
@@ -208,6 +195,7 @@ search:
               field: 'project_type'
 
       publication:
+        fix: ["fixes/index_publication.fix"]
         cql_mapping:
           default_index: basic
           indexes:
@@ -678,6 +666,7 @@ search:
               field: thematic_area
 
       researcher:
+        fix: ["fixes/index_user.fix"]
         cql_mapping:
           default_index: basic
           indexes:

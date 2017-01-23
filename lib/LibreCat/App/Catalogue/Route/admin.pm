@@ -67,7 +67,7 @@ Opens an empty form. The ID is automatically generated.
 
     get '/account/new' => needs role => 'super_admin' => sub {
         template 'admin/forms/edit_account',
-            {_id => h->new_record('researcher')};
+            {_id => LibreCat->store->generate_id('researcher')};
     };
 
 =head2 GET /account/search
@@ -110,7 +110,12 @@ Saves the data in the authority database.
         $p->{password} = mkpasswd($p->{password})
             if ($p->{password} and $p->{password} !~ /\$.{15,}/);
 
+        state $hook = h->hook('user-update');
+
         LibreCat->store->update('researcher', $p);
+
+        $hook->fix_after($p);
+
         template 'admin/account';
     };
 
@@ -144,7 +149,7 @@ Input is person id. Returns warning if person is already in the database.
 
     get '/project/new' => needs role => 'super_admin' => sub {
         template 'admin/forms/edit_project',
-            {_id => h->new_record('project')};
+            {_id => LibreCat->store->generate_id('project')};
     };
 
     get '/project/search' => sub {
@@ -174,7 +179,7 @@ Input is person id. Returns warning if person is already in the database.
 
     get '/research_group/new' => needs role => 'super_admin' => sub {
         template 'admin/forms/edit_research_group',
-            {_id => h->new_record('research_group')};
+            {_id => LibreCat->store->generate_id('research_group')};
     };
 
     get '/research_group/search' => sub {
@@ -194,36 +199,6 @@ Input is person id. Returns warning if person is already in the database.
         my $p = h->nested_params();
         my $return = LibreCat->store->update('research_group', $p);
         redirect '/librecat/admin/research_group';
-    };
-
-    get '/department' => needs role => 'super_admin' => sub {
-        my $hits = LibreCat->searcher->search('department',
-            {q => "", limit => 100, start => params->{start} || 0});
-        template 'admin/department', $hits;
-    };
-
-    get '/department/new' => needs role => 'super_admin' => sub {
-        template 'admin/forms/edit_department',
-            {_id => h->new_record('department')};
-    };
-
-    get '/department/search' => sub {
-        my $p = h->extract_params();
-
-        my $hits = LibreCat->searcher->search('department', $p);
-
-        template 'admin/department', $hits;
-    };
-
-    get '/department/edit/:id' => needs role => 'super_admin' => sub {
-        my $department = h->department->get(params->{id});
-        template 'admin/forms/edit_department', $department;
-    };
-
-    post '/department/update' => needs role => 'super_admin' => sub {
-        my $p = h->nested_params();
-        my $return = LibreCat->store->update('department', $p);
-        redirect '/librecat/admin/department';
     };
 
 };
