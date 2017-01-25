@@ -8,8 +8,7 @@
 .perl-version
 .tidyall.d/*
 .vagrant/
-Build
-Build.bat
+Build*
 MANIFEST.bak
 META.yml
 MYMETA.yml

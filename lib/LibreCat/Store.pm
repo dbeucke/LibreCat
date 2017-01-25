@@ -113,6 +113,13 @@ sub _store_record {
         $cite_fix->fix($rec);
     }
 
+    # TODO merge records & compare versions!
+    my $record_exists = $self->get($rec->{_id}) // {};
+    if ($record_exists) {
+        $rec = Hash::Merge->merge($rec, $record_exists);
+        # left or right precedence?
+    }
+
     # clean all the fields that are not part of the JSON schema
     state $validator_pkg = Catmandu::Util::require_package(ucfirst($bag),
         'LibreCat::Validator');

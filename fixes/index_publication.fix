@@ -1,0 +1,49 @@
+# fix publication data for indexing
+
+if exists(department)
+  do list(path:department, var:loop)
+    do identity()
+      copy_field(loop._id,loop.tmp)
+      lookup_in_store(loop.tmp, search, bag:department)
+      move_field(loop.tmp.tree, loop.tree)
+      remove_field(loop.tmp)
+    end
+  end
+end
+
+if exists(project)
+  do list(path:project, var:loop)
+    do identity()
+      copy_field(loop._id,loop.tmp)
+      lookup_in_store(loop.tmp, search, bag:project)
+      move_field(loop.tmp.call_identifier,loop.call_identifier)
+      move_field(loop.tmp.grant_number,loop.grant_number)
+      remove_field(loop.tmp)
+      if all_match(loop.call_identifier,'FP7|H2020')
+        add_field(ec_funded,1)
+      end
+    end
+  end
+end
+
+add_field(person_entity.$append, author)
+add_field(person_entity.$append, editor)
+add_field(person_entity.$append, translator)
+
+do list(path:person_entity, var:p)
+
+  if exists(p)
+    do list(path:p, var:loop)
+      do identity()
+        copy_field(loop._id,loop.tmp)
+        lookup_in_store(loop.tmp, search, bag:user)
+        move_field(loop.tmp.orcid, loop.orcid)
+        move_field(loop.tmp.first_name, loop.first_name)
+        move_field(loop.tmp.last_name, loop.last_name)
+        move_field(loop.tmp.full_name, loop.full_name)
+        remove_field(loop.tmp)
+      end
+    end
+  end
+
+end
