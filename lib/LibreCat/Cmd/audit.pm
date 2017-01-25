@@ -13,6 +13,13 @@ Usage:
 librecat audit [options] list [<RECORD-ID>]
 librecat audit [options] get <AUDIT-ID>
 
+An 'audit' worker should be up and running to
+store messages:
+
+Hint:
+
+bin/librecat worker audit start --workers 1 --supervise
+
 EOF
 }
 
@@ -60,14 +67,16 @@ sub _list {
     my $count = $it->each(
         sub {
             my ($item)   = @_;
-            my $id       = $item->{id}  // '';
+            my $id       = $item->{id}      // '';
+            my $process  = $item->{process} // '';
             my $message  = $item->{message} // '';
             my $time     = strftime("%Y-%m-%dT%H:%M:%S",localtime($item->{time} // 0));
 
-            printf "%s %s %-36.36s %s\n"
+            printf "%s %s %s %s %s\n"
                     , $item->{_id}
                     , $time
                     , $id
+                    , $process
                     , $message;
         }
     );
@@ -105,4 +114,10 @@ LibreCat::Cmd::audit - manage librecat audit messages
     librecat audit list [<RECORD-ID>]
     librecat audit get <AUDIT-ID>
 
+    An 'audit' worker should be up and running to
+    store messages:
+
+    Hint:
+
+    bin/librecat worker audit start --workers 1 --supervise
 =cut

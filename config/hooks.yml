@@ -39,8 +39,14 @@ hooks:
   publication-delete:
    before_fixes: []
    after_fixes: []
+
   # Code that runs at a 'Return' action
   publication-return:
+   before_fixes: []
+   after_fixes: []
+
+  # Code that runs when a publication access is tried without credentials
+  publication-access-denied:
    before_fixes: []
    after_fixes: []
 

@@ -1,0 +1,30 @@
+[% INCLUDE header.tt %]
+
+<div class="col-md-9 col-md-offset-1">
+    <div class="page-header" id="banner">
+        <h1>[% h.loc("audit.title") %]</h1>
+    </div>
+
+    <table border="1">
+        <tr>
+         <th>[% h.loc("audit.id") %]</th>
+         <th>[% h.loc("audit.bag") %]</th>
+         <th>[% h.loc("audit.process") %]</th>
+         <th>[% h.loc("audit.action") %]</th>
+         <th>[% h.loc("audit.date") %]</th>
+         <th>[% h.loc("audit.message") %]</th>
+        </tr>
+        [% FOREACH au in audit %]
+        <tr>
+         <td>[% au.id  %]</td>
+         <td>[% au.bag %]</td>
+         <td nowrap="nowrap">[% au.process %]</td>
+         <td>[% au.action %]</td>
+         <td nowrap="nowrap">[% au.date %]</td>
+         <td>[% au.message %]</td>
+        </tr>
+        [% END %]
+     </table>
+</div>
+
+[% INCLUDE footer.tt %]

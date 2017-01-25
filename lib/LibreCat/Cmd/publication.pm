@@ -26,9 +26,13 @@ librecat publication [options] fetch <source> <id>
 librecat publication [options] embargo ['update']
 
 options:
-    --total=NUM   (total number of items to list/export)
-    --start=NUM   (start list/export at this item)
-    --no-citation (skip calculating citations when adding records)
+    --total=NUM        (total number of items to list/export)
+    --start=NUM        (start list/export at this item)
+    --no-citation      (skip calculating citations when adding records)
+    --version=NUM      (get a specific record version)
+    --previous-version (get previous record version)
+    --history          (get all record versions)
+    --log=STR          (write an audit message)
 
 E.g.
 
@@ -62,6 +66,10 @@ sub command_opt_spec {
         ['no-citation|nc', ""] ,
         ['total=i', ""] ,
         ['start=i',""] ,
+        ['log=s',""] ,
+        ['version=i', ""] ,
+        ['previous-version', ""] ,
+        ['history',""] ,
     );
 }
 
@@ -120,6 +128,17 @@ sub command {
     }
 }
 
+sub audit_message {
+    my ($id,$action,$message) = @_;
+    LibreCat::App::Helper::Helpers->new->queue->add_job('audit',{
+        id      => $id ,
+        bag     => 'publication' ,
+        process => 'librecat publication' ,
+        action  => $action ,
+        message => $message ,
+    });
+}
+
 sub _list {
     my ($self, $query) = @_;
 
@@ -166,15 +185,33 @@ sub _export {
 }
 
 sub _get {
-    my ($self, $id) = @_;
+    my ($self, $id, @opts) = @_;
 
     croak "usage: $0 get <id>" unless defined($id);
 
     my $data = LibreCat->store->get('publication', $id);
+    my $rec;
 
-    Catmandu->export($data, 'YAML') if $data;
+    if (defined(my $version = $self->opts->{'version'})) {
+        $rec = $bag->get($id);
+        if ($rec && $rec->{_version} && $rec->{_version} > $version) {
+            $rec = $bag->get_version($id, $version);
+        }
+    } elsif ($self->opts->{'previous-version'}) {
+        $rec = $bag->get_previous_version($id);
+    } elsif ($self->opts->{'history'}) {
+        $rec = $bag->get_history($id);
+    } else {
+        $rec = $bag->get($id);
+    }
 
-    return $data ? 0 : 2;
+    if (my $msg = $self->opts->{log}) {
+        audit_message($id,'get',$msg);
+    }
+
+    Catmandu->export($rec, 'YAML') if $rec;
+
+    return $rec ? 0 : 2;
 }
 
 sub _add {
@@ -196,6 +233,11 @@ sub _add {
                 $rec->{_id} //= LibreCat->store->generate_id('publication');
                 LibreCat->store->_store_record('publication', $rec, $skip_citation);
                 print "added $rec->{_id}\n";
+
+                if (my $msg = $self->opts->{log}) {
+                    audit_message($rec->{_id},'add',$msg);
+                }
+
                 return 1;
             }
             else {
@@ -224,6 +266,10 @@ sub _delete {
 
     my $result = LibreCat->store->delete('publication', $id);
 
+    if (my $msg = $self->opts->{log}) {
+        audit_message($id,'delete',$msg);
+    }
+
     if ($result) {
         print "deleted $id\n";
         return 0;
@@ -240,6 +286,10 @@ sub _purge {
     croak "usage: $0 purge <id>" unless defined($id);
 
     my $result = LibreCat->store->purge('publication', $id);
+
+    if (my $msg = $self->opts->{log}) {
+        audit_message($id,'purge',$msg);
+    }
 
     if ($result) {
         print "purged $id\n";
@@ -274,6 +324,10 @@ sub _valid {
                 }
                 else {
                     print STDERR "ERROR $id: not valid\n";
+                }
+
+                if (my $msg = $self->opts->{log}) {
+                    audit_message($id,'valid',$msg);
                 }
             }
 
@@ -455,6 +509,10 @@ sub _files_load {
                     warn "$id - no such publication";
                 }
 
+                if (my $msg = $self->opts->{log}) {
+                    audit_message($id,'files',$msg);
+                }
+
                 $files = [];
             }
 
@@ -473,6 +531,10 @@ sub _files_load {
         }
         else {
             warn "$prev_id - no such publication";
+        }
+
+        if (my $msg = $self->opts->{log}) {
+            audit_message($prev_id,'files',$msg);
         }
     }
 }
@@ -597,7 +659,11 @@ LibreCat::Cmd::publication - manage librecat publications
     librecat publication embargo ['update']
 
     options:
-        --total=NUM   (total number of items to list/export)
-        --start=NUM   (start list/export at this item)
-        --no-citation (skip calculating citations when adding records)
+        --total=NUM        (total number of items to list/export)
+        --start=NUM        (start list/export at this item)
+        --no-citation      (skip calculating citations when adding records)
+        --version=NUM      (get a specific record version)
+        --previous-version (get previous record version)
+        --history          (get all record versions)
+        --log=STR          (write an audit message)
 =cut
