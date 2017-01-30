@@ -100,12 +100,8 @@
     <div class="col-lg-2 col-md-3 text-muted">[% h.loc("forms.${type}.field.keyword.label") %]</div>
     <div class="col-lg-10 col-md-9" itemprop="keywords">
     [%- FOREACH kw IN keyword %]
-<<<<<<< HEAD
-        <a href='/[% bag %]?cql=keyword="[% kw %]"'>[% kw | html %]</a>
-=======
         <a href='/[% IF type == 'research_data' %]data[% ELSE %]publication[% END %]?cql=keyword="[% kw %]"'>[% kw | html %]</a>
->>>>>>> dev
-      [%- UNLESS loop.last %]; [% END %]
+    [%- UNLESS loop.last %]; [% END %]
     [%- END %]
     </div>
   </div>
@@ -113,11 +109,7 @@
 
   <div class="row">
     <div class="col-lg-2 col-md-3 text-muted">[% lf.forms.${type}.field.year.label || h.loc("forms.${type}.field.year_extern.label") %]</div>
-<<<<<<< HEAD
-    <div class="col-lg-10 col-md-9"><span itemprop="copyrightYear"><a href="/[% bag %]?cql=year=[% year %]">[% year %]</a></span></div>
-=======
     <div class="col-lg-10 col-md-9"><span itemprop="copyrightYear"><a href="/[% IF type == 'research_data' %]data[% ELSE %]publication[% END %]?cql=year=[% year %]">[% year %]</a></span></div>
->>>>>>> dev
   </div>
   [%- FOREACH item IN ['publication', 'volume', 'issue', 'article_number', 'page'] %]
     [%- IF $item %]
