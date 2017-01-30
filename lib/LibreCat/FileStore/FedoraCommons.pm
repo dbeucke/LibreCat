@@ -5,6 +5,7 @@ use Moo;
 use Carp;
 use Catmandu::FedoraCommons;
 use LibreCat::FileStore::Container::FedoraCommons;
+use Data::UUID;
 use namespace::clean;
 
 with 'LibreCat::FileStore';
@@ -101,6 +102,12 @@ sub add {
 
     croak "Need a key" unless defined $key;
 
+    if ($key =~ /^new$/i) {
+        $self->log->debug("Generating new key...");
+        $key = $self->_generate_key;
+        $self->log->debug("key = $key");
+    }
+
     $self->log->debug("Generating path container for key $key");
 
     my $long_key = $self->_long_key($key);
@@ -133,10 +140,16 @@ sub delete {
         $self->fedora, $long_key);
 }
 
+sub _generate_key {
+    my $ug = Data::UUID->new;
+    my $uuid = $ug->create();
+    return $ug->to_string($uuid);
+}
+
 sub _long_key {
     my ($selk, $key) = @_;
     if ($key =~ /^\d+$/) {
-        return sprintf "%-12.12d", $key;
+        return sprintf "%-9.9d", $key;
     }
     else {
         return $key;
