@@ -115,13 +115,13 @@ sub _store_record {
     }
 
     # TODO merge records & compare versions!
-    # $self->store->transaction( sub{
-    #     my $record_exists = $self->get($rec->{_id}) // {};
-    #     if ($record_exists) {
-    #         state $merger = Hash::Merge->new();
-    #         $rec = $merger->merge($rec, $record_exists);
-    #     }
-    # });
+    $self->store->transaction( sub{
+        my $record_exists = $self->store->get($rec->{_id});
+        if ($record_exists) {
+            state $merger = Hash::Merge->new();
+            $rec = $merger->merge($rec, $record_exists);
+        }
+    });
 
     # clean all the fields that are not part of the JSON schema
     state $validator_pkg = Catmandu::Util::require_package(ucfirst($bag),
