@@ -11,8 +11,6 @@
       {% IF fields.basic_fields.translator.multiple OR fields.supplementary_fields.translator.multiple %}
       [% IF !translator %]
       <div class="row innerrow multirow">
-        <input type="hidden" id="translator_orig_first_name_0" value="" />
-        <input type="hidden" id="translator_orig_last_name_0" value="" />
 
         <div class="form-group col-md-3 col-xs-11">
           <div class="input-group sticky{% IF fields.basic_fields.translator.mandatory %} mandatory{% END %}">
@@ -53,16 +51,11 @@
         <script>
           $('#translator_Authorized0').tooltip();
         </script>
-        <input type="hidden" id="translator_id_0" name="translator.0.id" value="" />
-        <input type="hidden" id="translator_orcid_0" name="translator.0.orcid" value="" />
         {% END %}
       </div>
       [% ELSE %]
       [% FOREACH name IN translator %]
       <div class="row innerrow multirow">
-        <input type="hidden" id="translator_orig_first_name_[% loop.index %]" value="[% name.first_name | html %]" />
-        <input type="hidden" id="translator_orig_last_name_[% loop.index %]" value="[% name.last_name | html %]" />
-
         <div class="form-group col-md-3 col-xs-11">
           <div class="input-group sticky{% IF fields.basic_fields.translator.mandatory %} mandatory{% END %}">
             <div class="input-group-addon">
@@ -102,17 +95,12 @@
         <script>
           $('#translator_Authorized[% loop.index %]').tooltip();
         </script>
-        <input type="hidden" id="translator_id_[% loop.index %]" name="translator.[% loop.index %].id" value="[% name.id %]" />
-        <input type="hidden" id="translator_orcid_[% loop.index %]" name="translator.[% loop.index %].orcid" value="[% name.orcid %]" />
         {% END %}
       </div>
       [% END %]
       [% END %]
       {% ELSE %}
       <div class="row innerrow">
-        <input type="hidden" id="translator_orig_first_name_0" value="" />
-        <input type="hidden" id="translator_orig_last_name_0" value="" />
-
         <div class="form-group col-md-3 col-xs-11">
           <div class="input-group sticky{% IF fields.basic_fields.translator.mandatory %} mandatory{% END %}">
             <div class="input-group-addon">
@@ -150,8 +138,6 @@
         <script>
           $('#translator_Authorized0').tooltip();
         </script>
-        <input type="hidden" id="translator_id_0" name="translator.0.id" value="[% translator.0.id %]" />
-        <input type="hidden" id="translator_orcid_0" name="translator.0.orcid" value="[% translator.0.orcid %]" />
         {% END %}
       </div>
       {% END %}

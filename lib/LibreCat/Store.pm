@@ -2,6 +2,7 @@ package LibreCat::Store;
 
 use Catmandu::Sane;
 use JSON::MaybeXS qw(encode_json);
+use Hash::Merge;
 use LibreCat::Worker::Indexer;
 #use LibreCat::App::Catalogue::Controller::File;
 #use LibreCat::App::Catalogue::Controller::Material;
@@ -114,11 +115,13 @@ sub _store_record {
     }
 
     # TODO merge records & compare versions!
-    my $record_exists = $self->get($rec->{_id}) // {};
-    if ($record_exists) {
-        $rec = Hash::Merge->merge($rec, $record_exists);
-        # left or right precedence?
-    }
+    # $self->store->transaction( sub{
+    #     my $record_exists = $self->get($rec->{_id}) // {};
+    #     if ($record_exists) {
+    #         state $merger = Hash::Merge->new();
+    #         $rec = $merger->merge($rec, $record_exists);
+    #     }
+    # });
 
     # clean all the fields that are not part of the JSON schema
     state $validator_pkg = Catmandu::Util::require_package(ucfirst($bag),

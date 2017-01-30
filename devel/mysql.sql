@@ -1,3 +1,3 @@
-CREATE DATABASE librecat;
-GRANT ALL ON librecat_system.* TO 'librecat'@'localhost' IDENTIFIED BY 'librecat';
+CREATE DATABASE librecat_dev;
+GRANT ALL ON librecat_dev.* TO 'librecat'@'localhost' IDENTIFIED BY 'librecat';
 FLUSH PRIVILEGES;

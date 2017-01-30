@@ -11,6 +11,7 @@ use Catmandu qw(export_to_string);
 use Catmandu::Fix qw(expand);
 use LibreCat::App::Helper;
 use LibreCat::App::Catalogue::Controller::Permission;
+use LibreCat;
 use Dancer qw(:syntax);
 use Encode qw(encode);
 use Dancer::Plugin::Auth::Tiny;
@@ -323,7 +324,7 @@ For admins only!
         my $id = params->{id};
 
         return template 'backend/internal_view',
-            {data => to_yaml h->publication->get($id)};
+            { data => to_yaml(LibreCat->store->get('publication', $id)) };
     };
 
 =head2 GET /publish/:id
