@@ -58,6 +58,7 @@ Catmandu->store('search')->bag('publication')->drop;
 {
     my $result
         = test_app(qq|LibreCat::CLI| => ['publication', 'get', '999999999']);
+
     ok !$result->error, 'get threw no exception';
 
     my $output = $result->stdout;
@@ -109,7 +110,7 @@ Catmandu->store('search')->bag('publication')->drop;
     my $result
         = test_app(qq|LibreCat::CLI| => ['publication', 'get', '999999999']);
 
-    ok $result->error, 'ok no exception';
+    ok $result->error, 'ok throws exception';
 
     my $output = $result->stdout;
     ok length($output) == 0, 'got no result';

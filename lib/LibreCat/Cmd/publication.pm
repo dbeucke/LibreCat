@@ -189,21 +189,21 @@ sub _get {
 
     croak "usage: $0 get <id>" unless defined($id);
 
-    my $data = LibreCat->store->get('publication', $id);
+    #my $data = LibreCat->store->get('publication', $id);
     my $rec;
 
-    # if (defined(my $version = $self->opts->{'version'})) {
-    #     $rec = $bag->get($id);
-    #     if ($rec && $rec->{_version} && $rec->{_version} > $version) {
-    #         $rec = $bag->get_version($id, $version);
-    #     }
-    # } elsif ($self->opts->{'previous-version'}) {
-    #     $rec = $bag->get_previous_version($id);
-    # } elsif ($self->opts->{'history'}) {
-    #     $rec = $bag->get_history($id);
-    # } else {
-    #     $rec = $bag->get($id);
-    # }
+    if (defined(my $version = $self->opts->{'version'})) {
+        $rec = LibreCat->store->get('publication', $id);
+        if ($rec && $rec->{_version} && $rec->{_version} > $version) {
+            $rec = LibreCat->store->get_version('publication', $id, $version);
+        }
+    } elsif ($self->opts->{'previous-version'}) {
+        $rec = LibreCat->store->get_previous_version('publication', $id);
+    } elsif ($self->opts->{'history'}) {
+        $rec = LibreCat->store->get_history('publication', $id);
+    } else {
+        $rec = LibreCat->store->get('publication', $id);
+    }
 
     if (my $msg = $self->opts->{log}) {
         audit_message($id,'get',$msg);

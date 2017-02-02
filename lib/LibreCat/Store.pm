@@ -86,6 +86,40 @@ sub purge {
     return 1;
 }
 
+sub get_version {
+    my ($self, $bag, $id, $version) = @_;
+
+    if ($self->store->bag($bag)->can('version_bag')) {
+        $self->store->bag($bag)->get_version($id, $version);
+    }
+    else {
+        return {};
+    }
+}
+
+sub get_previous_version {
+    my ($self, $bag, $id) = @_;
+
+    if ($self->store->bag($bag)->can('version_bag')) {
+        $self->store->bag($bag)->get_previous_version($id);
+    }
+    else {
+        return {};
+    }
+
+}
+
+sub get_history {
+    my ($self, $bag, $id) = @_;
+
+    if ($self->store->bag($bag)->can('version_bag')) {
+        $self->store->bag($bag)->get_history($id);
+    }
+    else {
+        return {};
+    }
+}
+
 sub _store_record {
     my ($self, $bag, $rec, $skip_citation) = @_;
 
