@@ -82,7 +82,7 @@ post '/librecat/record/import' => needs login => sub {
             h->hook('import-new-'. $source)->fix_around(
                 $pub,
                 sub {
-                    h->update_record('publication', $pub);
+                    LibreCat->store->update('publication', $pub);
                 }
             );
         }

@@ -107,12 +107,11 @@ Author approves the request. Email will be sent to user.
 get '/rc/approve/:key' => sub {
     require Dancer::Plugin::Email;
 
-    my $bag  = Catmandu->store->bag('reqcopy');
-    my $data = $bag->get(params->{key});
+    my $data = LibreCat->store->get('reqcopy', params->{key});
     return "Nothing to approve." unless $data;
 
     $data->{approved} = 1;
-    $bag->add($data);
+    LibreCat->store->update($data);
 
     my $body = export_to_string({key => params->{key}, host => h->host},
         'Template', template => 'views/email/req_copy_approve.tt');
@@ -142,8 +141,7 @@ to user. Delete request key from database.
 get '/rc/deny/:key' => sub {
     require Dancer::Plugin::Email;
 
-    my $bag  = Catmandu->store->bag('reqcopy');
-    my $data = $bag->get(params->{key});
+    my $data = LibreCat->store->get('reqcopy', params->{key});
     return "Nothing to deny." unless $data;
 
     try {
@@ -154,7 +152,7 @@ get '/rc/deny/:key' => sub {
                 {}, 'Template', template => 'views/email/req_copy_deny.tt'
             ),
         };
-        $bag->delete(params->{key});
+        LibreCat->store->delete('reqcopy', params->{key});
         return "The user will be notified that the request has been denied.";
     }
     catch {
@@ -170,7 +168,7 @@ Now get the document if time has not expired yet.
 =cut
 
 get '/rc/:key' => sub {
-    my $check = Catmandu->store->bag('reqcopy')->get(params->{key});
+    my $check = LibreCat->store->get('reqcopy', params->{key});
     if ($check and $check->{approved} == 1) {
         if (my $file = _file_exists($check->{record_id}, $check->{file_name}))
         {
@@ -199,7 +197,6 @@ Request a copy of the publication. Email will be sent to the author.
 any '/rc/:id/:file_id' => sub {
     require Dancer::Plugin::Email;
 
-    my $bag = Catmandu->store->bag('reqcopy');
     my $file = _get_file_info(params->{id}, params->{file_id});
     unless ($file->{request_a_copy}) {
         forward '/publication/' . params->{id}, {method => 'GET'};
@@ -215,9 +212,9 @@ any '/rc/:id/:file_id' => sub {
         record_id    => params->{id},
     };
 
-    my $hits = $bag->search(query => $query, limit => 1);
+    my $hits = LibreCat->searcher->search({query => $query, limit => 1});
 
-    my $stored = $bag->add(
+    my $stored = LibreCat->store->update('reqcopy',
         {
             record_id    => params->{id},
             file_id      => params->{file_id},
@@ -230,7 +227,7 @@ any '/rc/:id/:file_id' => sub {
 
     my $file_creator_email = h->get_person($file->{creator})->{email};
     if (params->{user_email}) {
-        my $pub       = h->publication->get(params->{id});
+        my $pub       = LibreCat->store->get('publication', params->{id});
         my $mail_body = export_to_string(
             {
                 title      => $pub->{title},
