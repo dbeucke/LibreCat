@@ -81,7 +81,6 @@ requires 'Config::Onion', '>=1.007';
 requires 'Crypt::Digest::MD5';
 requires 'Crypt::SSLeay';
 requires 'File::Basename';
-requires 'Hash::Merge';
 requires 'XML::RSS';
 requires 'YAML::XS';
 requires 'YAML';

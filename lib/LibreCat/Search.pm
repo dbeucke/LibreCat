@@ -50,7 +50,7 @@ sub search {
 
     my %search_params = (
         cql_query    => $self->_cql_query($p),
-        query        => $p->{query} // {},
+#        query        => $p->{query} // {},
         sru_sortkeys => $self->_sru_sort($p->{sort}) // '',
         limit        => $self->_set_limit($p->{limit}),
         start        => $p->{start} // 0,

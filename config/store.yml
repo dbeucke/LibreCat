@@ -4,7 +4,7 @@ _prefix:
 default:
   package: DBI
   options:
-    data_source: "DBI:mysql:database=librecat_dev"
+    data_source: "DBI:mysql:database=librecat_system"
     username: librecat
     password: librecat
     bags:

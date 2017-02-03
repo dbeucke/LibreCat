@@ -2,7 +2,6 @@ package LibreCat::Store;
 
 use Catmandu::Sane;
 use JSON::MaybeXS qw(encode_json);
-use Hash::Merge;
 use LibreCat::Worker::Indexer;
 #use LibreCat::App::Catalogue::Controller::File;
 #use LibreCat::App::Catalogue::Controller::Material;
@@ -147,15 +146,6 @@ sub _store_record {
     if ($bag eq 'publication' && !$skip_citation) {
         $cite_fix->fix($rec);
     }
-
-    # TODO merge records & compare versions!
-    $self->store->transaction( sub{
-        my $record_exists = $self->store->get($rec->{_id});
-        if ($record_exists) {
-            state $merger = Hash::Merge->new();
-            $rec = $merger->merge($rec, $record_exists);
-        }
-    });
 
     # clean all the fields that are not part of the JSON schema
     state $validator_pkg = Catmandu::Util::require_package(ucfirst($bag),
