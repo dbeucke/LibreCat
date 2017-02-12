@@ -4,8 +4,12 @@ $icon-font-path: '/fonts/';
 // @import "bielestrap";
 $brand-primary: #163776;
 $font-family-sans-serif: 'Roboto', sans-serif;
+
+$btn-default-color: white;
+$btn-default-bg: $brand-primary;
+
 @import "bootstrap-sass/_bootstrap.scss";
-@import "bootstrap-theme";
+// @import "bootstrap-theme";
 @import "bootstrap-select";
 @import "font-awesome";
 @import "custom";
