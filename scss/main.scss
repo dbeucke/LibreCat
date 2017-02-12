@@ -1,8 +1,11 @@
 $icon-font-path: '/fonts/';
 
 /* @import "node_modules/bootstrap-sass/assets/stylesheets/bootstrap"; */
-@import "bielestrap";
+// @import "bielestrap";
+$brand-primary: #163776;
+
+@import "bootstrap-sass/_bootstrap.scss";
 @import "bootstrap-theme";
 @import "bootstrap-select";
 @import "font-awesome";
-@import "mypub";
+// @import "mypub";
