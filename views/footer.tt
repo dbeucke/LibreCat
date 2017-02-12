@@ -8,13 +8,13 @@
   <div class="container">
     <div class="row">
       <div class="col-sm-12">
-        <div class="col-md-4" style="text-align: center">
-          <p><a href="https://www.uni-goettingen.de"><img src="/images/logo_uni_goettingen.png" alt=""></a></p>
+        <div class="col-md-4" style="text-align: center; margin-top: 2em">
+          <p><a href="https://www.uni-goettingen.de"><img src="/images/logo_uni_goettingen_white.png" alt=""></a></p>
         </div>
-        <div class="col-md-4" style="text-align: center">
-          <p><a href="https://www.sub.uni-goettingen.de"><img src="/images/logo_sub_goettingen.png" alt=""></a></p>
+        <div class="col-md-4" style="text-align: center; margin-top: 1em">
+          <p><a href="https://www.sub.uni-goettingen.de"><img src="/images/logo_sub_goettingen_white.png" alt="" width="300px"></a></p>
         </div>
-        <div class="col-md-4" style="text-align: center">
+        <div class="col-md-4" style="text-align: center; margin-top: 2em">
           <p>[% h.loc("footer.powered_by") %]&nbsp;&nbsp;<a href="//librecat.org/"><img src="/images/librecat_logo.png" alt="" height="50px"></a></p>
         </div>
       </div>
