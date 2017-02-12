@@ -11,6 +11,10 @@ $font-family-sans-serif: 'Roboto', sans-serif;
 $btn-default-color: white;
 $btn-default-bg: $brand-primary;
 
+$navbar-inverse-bg: #163776;
+$navbar-inverse-link-color: white;
+// $navbar-default-bg:
+
 @import "bootstrap-sass/_bootstrap.scss";
 // @import "bootstrap-theme";
 @import "bootstrap-select";
