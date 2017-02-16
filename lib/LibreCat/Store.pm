@@ -3,8 +3,8 @@ package LibreCat::Store;
 use Catmandu::Sane;
 use JSON::MaybeXS qw(encode_json);
 use LibreCat::Worker::Indexer;
-#use LibreCat::App::Catalogue::Controller::File;
-#use LibreCat::App::Catalogue::Controller::Material;
+use LibreCat::App::Catalogue::Controller::File;
+use LibreCat::App::Catalogue::Controller::Material;
 use Moo;
 use namespace::clean;
 
@@ -171,7 +171,6 @@ sub _index_record {
     my ($self, $bag, $id) = @_;
 
     $self->log->debug("indexing record '$id' in $bag...");
-    $self->log->debug(encode_json($rec));
 
     state $queue = LibreCat::JobQueue->new;
     $queue->add_job('index_record', {bag => $bag, id=> $id});
