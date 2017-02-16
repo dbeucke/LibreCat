@@ -90,7 +90,7 @@ sub _calc_date {
 
 sub _get_file_info {
     my ($pub_id, $file_id) = @_;
-    my $rec = h->publication->get($pub_id);
+    my $rec = LibreCat->store->get('publication', $pub_id);
     if ($rec->{file} and ref $rec->{file} eq "ARRAY") {
         my $matching_items
             = (grep {$_->{file_id} eq $file_id} @{$rec->{file}})[0];
@@ -111,7 +111,7 @@ get '/rc/approve/:key' => sub {
     return "Nothing to approve." unless $data;
 
     $data->{approved} = 1;
-    LibreCat->store->update($data);
+    LibreCat->store->update('reqcopy', $data);
 
     my $body = export_to_string({key => params->{key}, host => h->host},
         'Template', template => 'views/email/req_copy_approve.tt');
