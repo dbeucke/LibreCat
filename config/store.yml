@@ -195,7 +195,6 @@ search:
               field: 'project_type'
 
       publication:
-        fix: ["fixes/index_publication.fix"]
         cql_mapping:
           default_index: basic
           indexes:
@@ -666,7 +665,6 @@ search:
               field: thematic_area
 
       researcher:
-        fix: ["fixes/index_user.fix"]
         cql_mapping:
           default_index: basic
           indexes:

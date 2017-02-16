@@ -123,10 +123,10 @@ sub _store_record {
     my ($self, $bag, $rec, $skip_citation) = @_;
 
     if ($bag eq 'publication') {
-    #    LibreCat::App::Catalogue::Controller::File::handle_file($rec);
+        LibreCat::App::Catalogue::Controller::File::handle_file($rec);
 
         if ($rec->{related_material}) {
-        #    LibreCat::App::Catalogue::Controller::Material::update_related_material($rec);
+            LibreCat::App::Catalogue::Controller::Material::update_related_material($rec);
         }
 
         # Set for every update the user_id of the last editor
@@ -171,8 +171,10 @@ sub _index_record {
     my ($self, $bag, $id) = @_;
 
     $self->log->debug("indexing record '$id' in $bag...");
-    #$self->log->debug(encode_json($rec));
-    LibreCat::Worker::Indexer->new->index_record({bag => $bag, id=> $id});
+    $self->log->debug(encode_json($rec));
+
+    state $queue = LibreCat::JobQueue->new;
+    $queue->add_job('index_record', {bag => $bag, id=> $id});
 
     1;
 }
