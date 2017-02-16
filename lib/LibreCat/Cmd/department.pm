@@ -15,6 +15,7 @@ librecat department [options] add <FILE>
 librecat department [options] get <id>
 librecat department [options] delete <id>
 librecat department [options] valid <FILE>
+librecay department [options] tree [<FILE>]
 
 options:
     --total=NUM   (total number of items to list/export)
@@ -44,7 +45,7 @@ sub command {
 
     $self->opts($opts);
 
-    my $commands = qr/list|export|get|add|delete|valid/;
+    my $commands = qr/list|export|get|add|delete|valid|tree/;
 
     unless (@$args) {
         $self->usage_error("should be one of $commands");
@@ -76,6 +77,9 @@ sub command {
     elsif ($cmd eq 'valid') {
         return $self->_valid(@$args);
     }
+    elsif ($cmd eq 'tree') {
+        return $self->_tree(@$args);
+    }
 }
 
 sub _list {
@@ -100,6 +104,96 @@ sub _list {
         }
     );
     print "count: $count\n";
+
+    return 0;
+}
+
+sub _tree {
+    my ($self,$file) = @_;
+
+    if ($file) {
+        $self->_tree_parse($file);
+    }
+    else {
+        $self->_tree_display;
+    }
+}
+
+sub _tree_parse {
+    my ($self,$file) = @_;
+
+    croak "usage: $0 tree <file>" unless defined($file) && -r $file;
+
+    my $importer  = Catmandu->importer('YAML', file => $file);
+    my $HASH      = $importer->first;
+    my $helper    = LibreCat::App::Helper::Helpers->new;
+
+    print "deleting previous departments...\n";
+    $helper->department->delete_all;
+
+    _tree_parse_parser($HASH->{tree}, sub {
+        my $rec = shift;
+        $helper->store_record('department', $rec);
+        $helper->index_record('department', $rec);
+        print "added $rec->{_id}\n";
+    });
+}
+
+sub _tree_parse_parser {
+    my $tree     = shift;
+    my $callback = shift;
+    my $layer    = shift // 1;
+    my $parents  = shift // [];
+
+    return unless $tree;
+
+    for my $node (keys %{$tree}) {
+        my $display = $tree->{$node}->{display};
+        my $name    = $tree->{$node}->{name};
+
+        $callback->({
+            _id     => $node ,
+            name    => $name ,
+            display => $display ,
+            layer   => $layer ,
+            tree    => $parents
+        });
+
+        _tree_parse_parser($tree->{$node}->{tree}, $callback, $layer + 1, [ { _id => $node } , @$parents ]);
+    }
+}
+
+sub _tree_display {
+    my $it = LibreCat::App::Helper::Helpers->new->department->searcher();
+
+    my $HASH = {};
+
+    $it->each(
+        sub {
+            my ($item) = @_;
+
+            my $tree = $item->{tree} // [];
+
+            my $root = $HASH;
+
+            my @reversed = reverse @$tree;
+
+            for my $node (@reversed) {
+                my $id = $node->{_id};
+
+                $root->{tree}->{$id} //= {};
+
+                $root = $root->{tree}->{$id};
+            }
+
+            $root->{tree}->{$item->{_id}}->{name}    = $item->{name};
+            $root->{tree}->{$item->{_id}}->{display} = $item->{display};
+        }
+    );
+
+    my $exporter = Catmandu->exporter('YAML');
+    $exporter->add($HASH);
+    $exporter->commit;
 
     return 0;
 }
@@ -146,9 +240,11 @@ sub _add {
         sub {
             my $rec = $_[0];
 
+            $rec->{_id} //= LibreCat->store->generate_id('department');
+
             if ($validator->is_valid($rec)) {
-                $rec->{_id} //= LibreCat->store->generate_id('department');
                 LibreCat->store->_store_record('department', $rec);
+
                 print "added $rec->{_id}\n";
                 return 1;
             }
@@ -238,6 +334,7 @@ LibreCat::Cmd::department - manage librecat departments
     librecat department get <id>
     librecat department delete <id>
     librecat department valid <FILE>
+    librecat department tree [<FILE>]
 
     options:
         --total=NUM   (total number of items to list/export)

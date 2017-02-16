@@ -20,14 +20,15 @@ requires 'Search::Elasticsearch', '==1.19';
 requires 'Module::Install', '1.16';
 
 # Catmandu
-requires 'Catmandu', '>=1.0304';
+requires 'Catmandu', '>=1.0306';
 requires 'Catmandu::Exporter::Table';
 requires 'Catmandu::Store::ElasticSearch', '>=0.0504';
 requires 'Catmandu::Store::MongoDB', '>=0.0403';
 requires 'Catmandu::DBI', '>=0.0510';
 requires 'Catmandu::BibTeX';
 requires 'Catmandu::XML';
-requires 'Catmandu::ArXiv';
+requires 'Catmandu::ArXiv', '>=0.031';
+requires 'Catmandu::LDAP';
 requires 'Catmandu::Importer::getJSON';
 requires 'Catmandu::Identifier', '>=0.05';
 requires 'Catmandu::RIS', '>=0.04';
@@ -39,7 +40,7 @@ requires 'Catmandu::OAI';
 requires 'Dancer';
 requires 'Dancer::Plugin';
 requires 'Dancer::FileUtils';
-requires 'Dancer::Plugin::Catmandu::OAI';
+requires 'Dancer::Plugin::Catmandu::OAI', '>=0.04';
 requires 'Dancer::Plugin::Catmandu::SRU';
 requires 'Dancer::Plugin::Email';
 requires 'Dancer::Plugin::Auth::Tiny';

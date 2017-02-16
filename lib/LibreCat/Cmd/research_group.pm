@@ -143,9 +143,11 @@ sub _add {
         sub {
             my $rec = $_[0];
 
+            $rec->{_id} //= LibreCat->store->generate_id('research_group');
+
             if ($validator->is_valid($rec)) {
-                $rec->{_id} //= LibreCat->store->generate_id('research_group');
                 LibreCat->store->_store_record('research_group', $rec);
+
                 print "added $rec->{_id}\n";
                 return 1;
             }

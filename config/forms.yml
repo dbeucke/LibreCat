@@ -73,9 +73,6 @@ field_order:
     - ddc
     - jel
     - keyword
-    - pacs_class
-    - msc_class
-    - ccs_class
     - conference.divider
     - conference.name
     - conference.location
@@ -101,9 +98,6 @@ field_order:
     - article_type
     - abstract
     - keyword
-    - pacs_class
-    - msc_class
-    - ccs_class
     - genbank
     - nasc
     - ddc
@@ -948,47 +942,18 @@ publication_types:
         alternative_id: *alternative_id
         link: *link
       related_material: *related_material
-array_field:
-  - abstract
-  - alternative_title
-  - applicant
-  - author
-  - author_secondary
-  - ccs_class
-  - corporate_editor
-  - corporate_editor_solo
-  - ddc
-  - department
-  - editor
-  - editor_solo
-  - file
-  - language
-  - msc_class
-  - original_language
-  - pacs_class
-  - project
-  - research_group
-  - supervisor
-  - thematic_area
-  - translator
-  - alternative_id
-  - jel
-  - link
-  - related_material.link
 
 other_items:
   account:
     account_field_order:
       - id
-      - account_type
-      - ext_institution
+      - login
       - password
       - names
-      - old_name
-      - email
-      - login
-      - department
       - account_status
+      - email
+      - ext_institution
+      - department
       - super_admin
       - delegate
       - data_manager
@@ -1002,20 +967,12 @@ other_items:
       label: "ID"
       readonly: 1
       mandatory: 1
-    account_type:
-      label: "Account Type"
-      mandatory: 1
-      values:
-        local:
-          label: "Local"
-          default: 1
-        external:
-          label: "External"
     ext_institution:
       label: "External Institution"
       label_short: "Ext. Institution"
     password:
       label: "Password"
+      mandatory: 1
     names:
       label: "Name"
       first_name:
@@ -1033,13 +990,14 @@ other_items:
     email:
       label: "Email"
     login:
-      label: "Login Name (LDAP)"
-      mandatory: 0
+      label: "Login"
+      mandatory: 1
     department:
       label: "Affiliation"
       multiple: 1
     account_status:
       label: "Active"
+      mandatory: 1
     super_admin:
       label: "Library Admin"
     delegate:

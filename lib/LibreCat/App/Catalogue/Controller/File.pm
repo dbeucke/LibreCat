@@ -149,7 +149,7 @@ sub handle_file {
     my $pub = shift;
     my $key = $pub->{_id};
 
-    h->log->info("updating file metadata for record $key");
+    h->log->debug("updating file metadata for record $key");
 
     $pub->{file} = _decode_file($pub->{file});
 
@@ -167,7 +167,7 @@ sub handle_file {
     for my $fi (@{$pub->{file}}) {
 
         # Generate a new file_id if not one existed
-        $fi->{file_id} = h->new_record('publication') if !$fi->{file_id};
+        $fi->{file_id} = h->new_record('publication') if ! defined($fi->{file_id});
 
         h->log->debug("processing file-id: " . $fi->{file_id});
 
@@ -177,7 +177,7 @@ sub handle_file {
             my $path     = path(h->config->{filestore}->{tmp_dir},
                 $fi->{tempid}, $filename);
 
-            h->log->info("new upload with temp-id -> $path");
+            h->log->debug("new upload with temp-id -> $path");
             _make_file($key, $filename, $path);
 
             h->log->debug(

@@ -6,6 +6,8 @@ use IO::String;
 use IO::Pipe;
 use namespace::clean;
 
+$SIG{CHLD} = 'IGNORE';
+
 has key => (is => 'ro', required => 1);
 has content_type => (is => 'ro');
 has size         => (is => 'ro');
@@ -20,15 +22,25 @@ sub fh {
     if (ref($self->data) =~ /^IO/) {
         $self->data;
     }
-    elsif (ref($self->data) eq 'CODE') {
+    elsif ($self->is_callback) {
         $self->io_from_callback($self->data);
     }
-    elsif ($self->data =~ /^http/i) {
+    elsif ($self->is_url) {
         $self->io_from_url($self->data);
     }
     else {
         IO::String->new($self->data);
     }
+}
+
+sub is_url {
+    my $self = shift;
+    $self->data =~ /^http/i;
+}
+
+sub is_callback {
+    my $self = shift;
+    ref($self->data) eq 'CODE'
 }
 
 sub io_from_url {
@@ -52,6 +64,7 @@ sub io_from_callback {
     elsif (defined($pid)) {    # child
         $pipe->writer;
         $callback->($pipe);
+        $pipe->close;
         exit;
     }
 }

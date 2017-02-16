@@ -6,7 +6,7 @@ CMD=$1
 case "${CMD}" in
     create)
         echo "Creating index..."
-        echo "researcher..."
+        echo "user..."
         carton exec bin/librecat user add devel/researcher.yml
         echo "publication..."
         carton exec bin/librecat publication add devel/publications.yml
@@ -18,7 +18,7 @@ case "${CMD}" in
         ;;
     drop)
         echo "Dropping index.."
-        echo "researcher..."
+        echo "user..."
         carton exec bin/librecat delete search --bag researcher
         echo "publication..."
         carton exec bin/librecat delete search --bag publication
@@ -31,7 +31,7 @@ case "${CMD}" in
         echo "Done"
         ;;
     drop_backup)
-        echo "Dropping index.."
+        echo "Dropping backup.."
         echo "ids..."
         carton exec bin/librecat delete default --bag data
         echo "researcher..."
@@ -46,23 +46,35 @@ case "${CMD}" in
         carton exec bin/librecat delete backup  --bag research_group
         echo "Done"
         ;;
+    drop_version)
+        echo "Dropping backup.."
+        echo "user..."
+        carton exec bin/librecat delete backup  --bag user_version
+        echo "publication..."
+        carton exec bin/librecat delete backup  --bag publication_version
+        echo "department..."
+        carton exec bin/librecat delete backup  --bag department_version
+        echo "project..."
+        carton exec bin/librecat delete backup  --bag project_version
+        echo "research_group..."
+        carton exec bin/librecat delete backup  --bag research_group_version
+        echo "Done"
+        ;;
     export)
         echo "Exporting index..."
 
         mkdir -p ${TMPDIR}
 
-        echo "researcher..."
-        carton exec bin/librecat export --bag researcher  to YAML > ${TMPDIR}/researcher.yml
+        echo "user..."
+        carton exec bin/librecat user list > ${TMPDIR}/researcher.yml
         echo "publication..."
-        carton exec bin/librecat export --bag publication to YAML > ${TMPDIR}/publications.yml
+        carton exec bin/librecat publication list > ${TMPDIR}/publications.yml
         echo "department..."
-        carton exec bin/librecat export --bag department to YAML > ${TMPDIR}/department.yml
+        carton exec bin/librecat department list > ${TMPDIR}/department.yml
         echo "project..."
-        carton exec bin/librecat export --bag project to YAML > ${TMPDIR}/project.yml
-        echo "award..."
-        carton exec bin/librecat export --bag award to YAML > ${TMPDIR}/award.yml
+        carton exec bin/librecat project list > ${TMPDIR}/project.yml
         echo "research_group..."
-        carton exec bin/librecat export --bag research_group to YAML > ${TMPDIR}/research_group.yml
+        carton exec bin/librecat research_group list > ${TMPDIR}/research_group.yml
 
         cd ${TMPDIR}
 
@@ -94,8 +106,8 @@ case "${CMD}" in
 
         cd -
 
-        echo "researcher..."
-        carton exec bin/librecat researcher add ${TMPDIR}/researcher.yml
+        echo "user..."
+        carton exec bin/librecat user add ${TMPDIR}/user.yml
         echo "publications..."
         carton exec bin/librecat publication add ${TMPDIR}/publications.yml
         echo "department..."
@@ -110,6 +122,6 @@ case "${CMD}" in
         echo "Done"
         ;;
     *)
-        echo "usage: $0 {create|drop|drop_backup|export|import}"
+        echo "usage: $0 {create|drop|drop_backup|drop_version|export|import}"
         exit 1
 esac

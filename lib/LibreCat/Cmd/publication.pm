@@ -223,15 +223,17 @@ sub _add {
     my $importer  = Catmandu->importer('YAML', file => $file);
     my $validator = LibreCat::Validator::Publication->new;
 
-    my $skip_citation = $self->opts->{'no-citation'} ? 1 : 0;
+    my $skip_citation = $self->opts->{'no_citation'} ? 1 : 0;
 
     my $records = $importer->benchmark->select(
         sub {
             my $rec = $_[0];
 
+            $rec->{_id} //= LibreCat->store->generate_id('publication');
+
             if ($validator->is_valid($rec)) {
-                $rec->{_id} //= LibreCat->store->generate_id('publication');
                 LibreCat->store->_store_record('publication', $rec, $skip_citation);
+
                 print "added $rec->{_id}\n";
 
                 if (my $msg = $self->opts->{log}) {
@@ -469,7 +471,7 @@ sub _files_load {
         access_level creator content_type
         date_created date_updated file_id
         file_name file_size open_access
-        request_a_copy
+        request_a_copy checksum
         relation title description embargo
     );
 

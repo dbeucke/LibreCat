@@ -3,11 +3,10 @@ _prefix:
 
 # engine for citation generation
 # possible values are 'csl' or 'none'
-engine: none
+engine: csl
 
-template:
-  template_path: 'views/citation.tt'
-
+# example 'csl' style citation generation
+# see: https://github.com/LibreCat/LibreCat/wiki/Citation-Style-Language
 csl:
   url: 'http://localhost:8085'
   default_style: apa
@@ -17,3 +16,9 @@ csl:
     - chicago-fullnote-bibliography
     - ieee
     - modern-language-association
+  zotero_styles:
+    american-medical-association: american-medical-association
+    apa: apa
+    chicago-fullnote-bibliography: chicago-fullnote-bibliography
+    ieee: ieee
+    mla: modern-language-association
