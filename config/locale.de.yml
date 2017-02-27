@@ -39,6 +39,12 @@ header:
   logged_in_as: "Eingeloggt als"
 footer:
   powered_by: "Powered by <a href='http://www.librecat.org/'>LibreCat</a>"
+styles:
+  apa: APA
+  mla: MLA
+  chicago: Chicago
+  ieee: IEEE
+  ama: AMA
 tabs:
   home: "Startseite"
   all_publications: "Alle Publikationen"
@@ -279,8 +285,8 @@ add_new:
   heading: "Neue Publikation anlegen"
   import: "Option 1:<br />Geben Sie einen Publikations-Identifier zum Import ein"
   ids:
-    doi: "DOI"
-    pmid: "PMID"
+    crossref: "DOI"
+    epmc: "PMID"
     arxiv: "ArXiv ID"
     inspire: "Inspire ID"
   do_it_yourself: "Option 2:<br />W&auml;hlen Sie einen Typ und f&uuml;llen Sie das Formular aus"
@@ -1705,3 +1711,8 @@ help:
   citation: "Publikationsdaten im ausgew&auml;hlten Zitationsstil."
   search: "In dieser Publikationsliste suchen."
   display_block: "Darstellung der Publikationsliste &auml;ndern (Treffer pro Seite, Sortierung, Zitationsstil)."
+cc_licenses:
+  cc_0: CC0 (1.0)
+  cc_by: CC BY (4.0)
+  cc_by_sa: CC BY-SA (4.0)
+

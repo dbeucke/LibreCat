@@ -1,0 +1,10 @@
+_prefix:
+  features:
+
+views:
+  footer:
+    - template: powered_by
+  publication_edit:
+    js:
+      validation:
+        - template: check_required

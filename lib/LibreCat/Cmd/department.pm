@@ -244,7 +244,6 @@ sub _add {
 
             if ($validator->is_valid($rec)) {
                 LibreCat->store->_store_record('department', $rec);
-
                 print "added $rec->{_id}\n";
                 return 1;
             }

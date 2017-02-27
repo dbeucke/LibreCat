@@ -12,6 +12,7 @@ cache:
 
 env:
   - NETWORK_TEST=1
+  - GEARMAN_NETWORK_TEST=1
 
 before_install:
   - curl -O https://download.elasticsearch.org/elasticsearch/elasticsearch/elasticsearch-1.7.0.deb && sudo dpkg -i --force-confnew elasticsearch-1.7.0.deb && sudo service elasticsearch restart
@@ -30,7 +31,7 @@ install:
   - cpanm --quiet --notest --skip-satisfied Devel::Cover
 
 script:
-  - prove -lr t/
+  - cover -t +select ^lib +ignore ^ -make 'prove -Ilib -r t; exit $?'
 
 after_success:
   - cpanm --quiet --notest --skip-satisfied Devel::Cover::Report::Coveralls
