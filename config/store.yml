@@ -28,22 +28,9 @@ default:
       publication: &backup_settings
         plugins: ['Datestamps', 'Versioning']
       project: *backup_settings
-      researcher: *backup_settings
+      user: *backup_settings
       department: *backup_settings
       research_group: *backup_settings
-
-metrics:
-  package: DBI
-  options:
-    data_source: "DBI:mysql:database=librecat_metrics"
-    username: librecat
-    password: librecat
-    bags:
-      wos: &metrics_settings
-        plugins: ['Datestamps']
-      epmc_citations: *metrics_settings
-      epmc_references: *metrics_settings
-      epmc_dblinks: *metrics_settings
 
 search:
   package: ElasticSearch
@@ -672,7 +659,7 @@ search:
                 'exact': true
               field: thematic_area
 
-      researcher:
+      user:
         cql_mapping:
           default_index: basic
           indexes:
@@ -1053,7 +1040,7 @@ search:
           user_id: {type: string, index: no}
           citation: {index: not_analyzed, type: object}
 
-      researcher:
+      user:
         include_in_all: false
         properties:
           _id: {type: string, include_in_all: true, index: not_analyzed}

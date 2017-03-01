@@ -7,7 +7,7 @@ case "${CMD}" in
     create)
         echo "Creating index..."
         echo "user..."
-        carton exec bin/librecat user add devel/researcher.yml
+        carton exec bin/librecat user add devel/user.yml
         echo "publication..."
         carton exec bin/librecat publication add devel/publications.yml
         echo "department..."
@@ -21,7 +21,7 @@ case "${CMD}" in
     drop)
         echo "Dropping index.."
         echo "user..."
-        carton exec bin/librecat delete search --bag researcher
+        carton exec bin/librecat delete search --bag user
         echo "publication..."
         carton exec bin/librecat delete search --bag publication
         echo "department..."
@@ -36,30 +36,30 @@ case "${CMD}" in
         echo "Dropping backup.."
         echo "ids..."
         carton exec bin/librecat delete default --bag data
-        echo "researcher..."
-        carton exec bin/librecat delete backup  --bag researcher
+        echo "user..."
+        carton exec bin/librecat delete --bag user
         echo "publication..."
-        carton exec bin/librecat delete backup  --bag publication
+        carton exec bin/librecat delete --bag publication
         echo "department..."
-        carton exec bin/librecat delete backup  --bag department
+        carton exec bin/librecat delete --bag department
         echo "project..."
-        carton exec bin/librecat delete backup  --bag project
+        carton exec bin/librecat delete --bag project
         echo "research_group..."
-        carton exec bin/librecat delete backup  --bag research_group
+        carton exec bin/librecat delete --bag research_group
         echo "Done"
         ;;
     drop_version)
         echo "Dropping backup.."
         echo "user..."
-        carton exec bin/librecat delete backup  --bag user_version
+        carton exec bin/librecat delete --bag user_version
         echo "publication..."
-        carton exec bin/librecat delete backup  --bag publication_version
+        carton exec bin/librecat delete --bag publication_version
         echo "department..."
-        carton exec bin/librecat delete backup  --bag department_version
+        carton exec bin/librecat delete --bag department_version
         echo "project..."
-        carton exec bin/librecat delete backup  --bag project_version
+        carton exec bin/librecat delete --bag project_version
         echo "research_group..."
-        carton exec bin/librecat delete backup  --bag research_group_version
+        carton exec bin/librecat delete --bag research_group_version
         echo "Done"
         ;;
     export)
@@ -68,7 +68,7 @@ case "${CMD}" in
         mkdir -p ${TMPDIR}
 
         echo "user..."
-        carton exec bin/librecat user list > ${TMPDIR}/researcher.yml
+        carton exec bin/librecat user list > ${TMPDIR}/user.yml
         echo "publication..."
         carton exec bin/librecat publication list > ${TMPDIR}/publications.yml
         echo "department..."

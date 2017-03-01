@@ -1,8 +1,8 @@
-CREATE DATABASE librecat_system;
-GRANT ALL ON librecat_system.* TO 'librecat'@'localhost' IDENTIFIED BY 'librecat';
+CREATE DATABASE librecat_backup;
+GRANT ALL ON librecat_backup.* TO 'librecat'@'localhost' IDENTIFIED BY 'librecat';
 FLUSH PRIVILEGES;
 
-USE librecat_system;
+USE librecat_backup;
 
 DROP TABLE IF EXISTS `data`;
 CREATE TABLE `data` (
@@ -40,7 +40,7 @@ CREATE TABLE `project` (
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
-DROP TABLE IF EXISTS `researcher`;
+DROP TABLE IF EXISTS `user`;
 CREATE TABLE `researcher` (
   `id` varchar(255) CHARACTER SET utf8 COLLATE utf8_bin NOT NULL,
   `data` longblob NOT NULL,
