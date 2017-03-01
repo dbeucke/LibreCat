@@ -17,7 +17,7 @@ BEGIN {
 require_ok $_ for @worker_pkg;
 
 {
-    my $x = LibreCat::Validator::Researcher->new;
+    my $x = LibreCat::Validator::User->new;
 
     ok $x , 'got a researcher validator';
 
