@@ -52,7 +52,7 @@ sub command {
 sub _get {
     my ($self) = @_;
 
-    my $data = LibreCat->store->get('info', 'info_id');
+    my $data = LibreCat->store->get('info', 'last_id');
     Catmandu->export($data, 'YAML') if $data;
 
     return $data ? 0 : 2;
@@ -63,7 +63,14 @@ sub _set {
 
     croak "usage: $0 set <ID>" unless defined($id);
 
-    printf "Counter set to %d", $id;
+    Catmandu->store->transaction(
+        sub {
+            Catmandu->store->bag('info')->add({ _id => 'last_id', latest =>  $id});
+            Catmandu->store->bag('info')->commit;
+        }
+    );
+
+    printf "counter set %d", $id;
 
     return 0;
 }

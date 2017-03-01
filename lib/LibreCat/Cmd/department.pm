@@ -128,7 +128,7 @@ sub _tree_parse {
     my $HASH      = $importer->first;
 
     print "deleting previous departments...\n";
-    LibreCat->store->delete_all('department');
+    Catmandu->store->bag('department')->delete_all;
 
     _tree_parse_parser($HASH->{tree}, sub {
         my $rec = shift;

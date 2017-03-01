@@ -33,20 +33,19 @@ subtest 'initial_get' => sub {
 };
 
 subtest 'set_get' => sub {
-    my $result = test_app(qq|LibreCat::CLI| => ['counter', 'set', '1234']);
+    my $result = test_app(qq|LibreCat::CLI| => ['counter', 'set', '10000']);
     ok !$result->error, "threw no exception";
 
     my $output = $result->stdout;
     ok $output, "output exists";
-    like $output , qr/^added 1234/, 'set id was successful';
+    like $output , qr/^counter set 10000/, 'set id was successful';
 
     $result = test_app(qq|LibreCat::CLI| => ['counter', 'get']);
     ok !$result->error, 'threw no exception';
 
     $output = $result->stdout;
     ok $output, "output exists";
-    like $output , qr/1234/, 'get new id';
-
+    like $output , qr/10000/, 'get id';
 };
 
 done_testing;

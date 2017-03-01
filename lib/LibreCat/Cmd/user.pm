@@ -1,7 +1,7 @@
 package LibreCat::Cmd::user;
 
 use Catmandu::Sane;
-use LibreCat::Validator::Researcher;
+use LibreCat::Validator::User;
 use App::bmkpasswd qw(passwdcmp mkpasswd);
 use Carp;
 use parent qw(LibreCat::Cmd);
@@ -89,7 +89,7 @@ sub _list {
     my $total = $self->opts->{total} // undef;
     my $start = $self->opts->{start} // undef;
 
-    my $it = Catmandu->store('search')->bag('researcher')->searcher(
+    my $it = Catmandu->store('search')->bag('user')->searcher(
         cql_query => $query , total => $total , start => $start
     );
 
@@ -117,7 +117,7 @@ sub _export {
     my $total = $self->opts->{total} // undef;
     my $start = $self->opts->{start} // undef;
 
-    my $it = Catmandu->store('search')->bag('researcher')->searcher(
+    my $it = Catmandu->store('search')->bag('user')->searcher(
         cql_query => $query , total => $total , start => $start
     );
 
@@ -133,7 +133,7 @@ sub _get {
 
     croak "usage: $0 get <id>" unless defined($id);
 
-    my $data = LibreCat->store->get('researcher', $id);
+    my $data = LibreCat->store->get('user', $id);
 
     Catmandu->export($data, 'YAML') if $data;
 
@@ -147,24 +147,24 @@ sub _add {
 
     my $ret       = 0;
     my $importer  = Catmandu->importer('YAML', file => $file);
-    my $validator = LibreCat::Validator::Researcher->new;
+    my $validator = LibreCat::Validator::User->new;
 
     my $records = $importer->select(
         sub {
             my $rec = $_[0];
 
-            $rec->{_id} //= LibreCat->store->generate_id('researcher');
+            $rec->{_id} //= LibreCat->store->generate_id('user');
             $rec->{password} = mkpasswd($rec->{password})
                 if exists $rec->{password};
 
             if ($validator->is_valid($rec)) {
-                LibreCat->store->_store_record('researcher', $rec);
+                LibreCat->store->_store_record('user', $rec);
                 print "added $rec->{_id}\n";
                 return 1;
             }
             else {
                 print STDERR join("\n",
-                    "ERROR: not a valid researcher",
+                    "ERROR: not a valid user",
                     @{$validator->last_errors}),
                     "\n";
                 $ret = 2;
@@ -173,7 +173,7 @@ sub _add {
         }
     );
 
-    my $index = Catmandu->store('search')->bag('researcher');
+    my $index = Catmandu->store('search')->bag('user');
     $index->add_many($records);
     $index->commit;
 
@@ -185,7 +185,7 @@ sub _delete {
 
     croak "usage: $0 delete <id>" unless defined($id);
 
-    my $result = LibreCat->store->delete('researcher', $id);
+    my $result = LibreCat->store->delete('user', $id);
 
     if ($result) {
         print "deleted $id\n";
@@ -202,7 +202,7 @@ sub _valid {
 
     croak "usage: $0 valid <FILE>" unless defined($file) && -r $file;
 
-    my $validator = LibreCat::Validator::Researcher->new;
+    my $validator = LibreCat::Validator::User->new;
 
     my $ret = 0;
 
@@ -256,7 +256,7 @@ sub _passwd {
 
     $data->{password} = mkpasswd($password2);
 
-    $data = LibreCat->store->update('researcher', $data);
+    $data = LibreCat->store->update('user', $data);
 
     return 0;
 }

@@ -750,7 +750,7 @@ publication:
   additionalProperties: true
 
 #used in LibreCat::Validator::Researcher
-researcher:
+user:
   "$schema": "http://json-schema.org/draft-04/schema#"
   title: "librecat researcher"
   type: "object"

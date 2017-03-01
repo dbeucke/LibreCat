@@ -27,6 +27,7 @@ default:
                 type: integer
       publication: &backup_settings
         plugins: ['Datestamps', 'Versioning']
+        id_generator: Incremental
       project: *backup_settings
       user: *backup_settings
       department: *backup_settings

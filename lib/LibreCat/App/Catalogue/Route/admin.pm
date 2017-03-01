@@ -67,7 +67,7 @@ Opens an empty form. The ID is automatically generated.
 
     get '/account/new' => needs role => 'super_admin' => sub {
         template 'admin/forms/edit_account',
-            {_id => LibreCat->store->generate_id('researcher')};
+            {_id => LibreCat->store->generate_id('user')};
     };
 
 =head2 GET /account/search
@@ -78,8 +78,8 @@ Searches the authority database. Prints the search form + result list.
 
     get '/account/search' => needs role => 'super_admin' => sub {
         my $p = params;
-        h->log->debug("query for researcher: " . to_dumper($p));
-        my $hits = LibreCat->searcher->search('researcher', $p);
+        h->log->debug("query for user: " . to_dumper($p));
+        my $hits = LibreCat->searcher->search('user', $p);
         template 'admin/account', $hits;
     };
 
@@ -90,7 +90,7 @@ Opens the record with ID id.
 =cut
 
     get '/account/edit/:id' => needs role => 'super_admin' => sub {
-        my $person = h->researcher->get(params->{id});
+        my $person = LibreCat->store->get('user', params->{id});
         template 'admin/forms/edit_account', $person;
     };
 
@@ -125,19 +125,8 @@ Deletes the account with ID :id.
 =cut
 
     get '/account/delete/:id' => needs role => 'super_admin' => sub {
-        h->delete_record('researcher', params->{id});
+        LibreCat->store->delete('user', params->{id});
         redirect '/librecat';
-    };
-
-=head2 GET /account/import
-
-Input is person id. Returns warning if person is already in the database.
-
-=cut
-
-    get '/account/import' => needs role => 'super_admin' => sub {
-        # todo: was Bielefeld specific....
-        template 'admin/account';
     };
 
     get '/project' => needs role => 'super_admin' => sub {
