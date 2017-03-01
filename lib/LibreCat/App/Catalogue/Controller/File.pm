@@ -167,7 +167,7 @@ sub handle_file {
     for my $fi (@{$pub->{file}}) {
 
         # Generate a new file_id if not one existed
-        $fi->{file_id} = h->new_record('publication') if ! defined($fi->{file_id});
+        $fi->{file_id} = LibreCat->store->generate_id('publication') if ! defined($fi->{file_id});
 
         h->log->debug("processing file-id: " . $fi->{file_id});
 
@@ -246,7 +246,7 @@ sub update_file {
     $file->{date_created} = h->now($res->{created});
     $file->{date_updated} = h->now($res->{modified});
     $file->{creator} //= 'system';
-    $file->{file_id} //= h->new_record('publication');
+    $file->{file_id} //= LibreCat->store->generate_id('publication');
 
     $file->{access_level} //= 'open_access';
     $file->{open_access}  //= 1;

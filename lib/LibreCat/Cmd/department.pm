@@ -126,15 +126,13 @@ sub _tree_parse {
 
     my $importer  = Catmandu->importer('YAML', file => $file);
     my $HASH      = $importer->first;
-    my $helper    = LibreCat::App::Helper::Helpers->new;
 
     print "deleting previous departments...\n";
-    $helper->department->delete_all;
+    LibreCat->store->delete_all('department');
 
     _tree_parse_parser($HASH->{tree}, sub {
         my $rec = shift;
-        $helper->store_record('department', $rec);
-        $helper->index_record('department', $rec);
+        LibreCat->store->update('department', $rec);
         print "added $rec->{_id}\n";
     });
 }
@@ -164,7 +162,7 @@ sub _tree_parse_parser {
 }
 
 sub _tree_display {
-    my $it = LibreCat::App::Helper::Helpers->new->department->searcher();
+    my $it = Catmandu->store('search')->bag('department')->searcher;
 
     my $HASH = {};
 

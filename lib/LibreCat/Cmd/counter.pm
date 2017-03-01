@@ -63,6 +63,9 @@ sub _set {
 
     croak "usage: $0 set <ID>" unless defined($id);
 
+    printf "Counter set to %d", $id;
+
+    return 0;
 }
 
 1;
@@ -73,7 +76,7 @@ __END__
 
 =head1 NAME
 
-LibreCat::Cmd::project - manage librecat projects
+LibreCat::Cmd::counter - manage ID counter
 
 =head1 SYNOPSIS
 

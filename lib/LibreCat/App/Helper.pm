@@ -1,4 +1,4 @@
-package LibreCat::App::Helper::Helpers;
+    package LibreCat::App::Helper::Helpers;
 
 use FindBin;
 use Catmandu::Sane;
@@ -42,42 +42,6 @@ sub alphabet {
 
 sub bag {
     state $bag = Catmandu->store->bag;
-}
-
-sub backup_audit {
-    state $bag = Catmandu->store->bag('audit');
-}
-
-sub backup_publication {
-    state $bag = Catmandu->store->bag('publication');
-}
-
-sub backup_publication_static {
-    my ($self) = @_;
-    my $backup = Catmandu::Store::DBI->new(
-        'data_source' =>
-            $self->config->{store}->{options}->{data_source},
-        username => $self->config->{store}->{backup}->{options}->{username},
-        password => $self->config->{store}->{backup}->{options}->{password},
-        bags     => {publication => {plugins => ['Versioning']}},
-    );
-    state $bag = $backup->bag('publication');
-}
-
-sub backup_project {
-    state $bag = Catmandu->store->bag('project');
-}
-
-sub backup_researcher {
-    state $bag = Catmandu->store->bag('researcher');
-}
-
-sub backup_department {
-    state $bag = Catmandu->store->bag('department');
-}
-
-sub backup_research_group {
-    state $bag = Catmandu->store->bag('research_group');
 }
 
 sub publication {
@@ -352,7 +316,7 @@ sub get_metrics {
     my ($self, $bag, $id) = @_;
     return {} unless $bag and $id;
 
-    return Catmandu->store('metrics')->bag($bag)->get($id);
+    return Librecat->store->get($bag, $id) // {};
 }
 
 sub display_doctypes {
@@ -376,29 +340,6 @@ sub display_name_from_value {
 
 sub host {
     $_[0]->config->{host};
-}
-
-sub export_publication {
-    my ($self, $hits, $fmt, $to_string) = @_;
-
-    if (my $spec = config->{exporter}->{publication}->{$fmt}) {
-        my $package = $spec->{package};
-        my $options = $spec->{options} || {};
-
-        $options->{style} = $hits->{style} || 'default';
-        $options->{explinks} = params->{explinks};
-        my $content_type = $spec->{content_type} || mime->for_name($fmt);
-        my $extension    = $spec->{extension}    || $fmt;
-
-        my $f = export_to_string($hits, $package, $options);
-        return $f if $to_string;
-
-        return Dancer::send_file(
-            \$f,
-            content_type => $content_type,
-            filename     => "publications.$extension"
-        );
-    }
 }
 
 sub get_file_store {

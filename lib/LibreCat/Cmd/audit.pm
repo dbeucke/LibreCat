@@ -1,7 +1,6 @@
 package LibreCat::Cmd::audit;
 
 use Catmandu::Sane;
-use LibreCat::App::Helper;
 use Carp;
 use POSIX qw(strftime);
 use parent qw(LibreCat::Cmd);
@@ -56,8 +55,8 @@ sub command {
 sub _list {
     my ($self, $pid) = @_;
 
-    my $it = LibreCat::App::Helper::Helpers->new->backup_audit();
-
+    #my $it = LibreCat::App::Helper::Helpers->new->backup_audit();
+    my $it = Catmandu->store->bag('audit');
     if ($pid) {
         $it = $it->select( id => $pid )->sorted(sub {
             $_[0]->{time} cmp $_[1]->{time}
@@ -91,7 +90,7 @@ sub _get {
 
     croak "usage: $0 get <id>" unless defined($id);
 
-    my $data = LibreCat::App::Helper::Helpers->new->backup_audit->get($id);
+    my $data = LibreCat->store->get('audit', $id);
 
     Catmandu->export($data, 'YAML') if $data;
 

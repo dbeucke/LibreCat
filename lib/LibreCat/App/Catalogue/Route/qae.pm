@@ -15,7 +15,7 @@ post '/librecat/upload/qae/submit' => needs login => sub {
     my $submit_or_cancel = params->{submit_or_cancel} || "Cancel";
 
     if ($submit_or_cancel eq "Submit") {
-        my $id = LibreCat->store>generate_id('publication');
+        my $id = LibreCat->store->generate_id('publication');
         my $person
             = h->get_person(params->{delegate} || session->{personNumber});
         my $department = h->get_department(params->{reviewer})

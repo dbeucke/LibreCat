@@ -78,6 +78,10 @@ sub store {
     state $store = require_package('LibreCat::Store')->new(store => Catmandu->store('default'));
 }
 
+sub queue {
+    state $queue = require_package('LibreCat::JobQueue')->new();
+}
+
 1;
 
 __END__

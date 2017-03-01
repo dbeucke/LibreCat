@@ -166,8 +166,7 @@ sub _generate_departments {
     my $template_paths  = $layers->template_paths;
     my $output_path     = $template_paths->[0] . '/department';
 
-    my $pubs = LibreCat::App::Helper::Helpers->new->publication;
-    my $it   = LibreCat::App::Helper::Helpers->new->department->searcher();
+    my $it   =Catmandu->store('search')->bag('department')->searcher();
 
     my $HASH = {};
 
@@ -190,7 +189,7 @@ sub _generate_departments {
             }
 
             my $id    = $item->{_id};
-            my $hits  = $pubs->search(query => "department:$id" );
+            my $hits  = LibreCat->searcher->search({query => "department:$id"});
             my $total = $hits->{total};
 
             $root->{tree}->{$id}->{name}    = $item->{name};

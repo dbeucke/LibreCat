@@ -13,7 +13,6 @@ with 'Catmandu::Logger';
 has store => (
     is => 'ro',
     required => 1,
-    # TODO: check if this is a Catmandu::Store
 );
 
 has search_store => (
@@ -123,7 +122,9 @@ sub _store_record {
     my ($self, $bag, $rec, $skip_citation) = @_;
 
     if ($bag eq 'publication') {
-        LibreCat::App::Catalogue::Controller::File::handle_file($rec);
+        if ($rec->{file}) {
+            LibreCat::App::Catalogue::Controller::File::handle_file($rec);
+        }
 
         if ($rec->{related_material}) {
             LibreCat::App::Catalogue::Controller::Material::update_related_material($rec);
@@ -172,8 +173,7 @@ sub _index_record {
 
     $self->log->debug("indexing record '$id' in $bag...");
 
-    state $queue = LibreCat::JobQueue->new;
-    $queue->add_job('index_record', {bag => $bag, id=> $id});
+    LibreCat->queue->add_job('index_record', {bag => $bag, id=> $id});
 
     1;
 }
